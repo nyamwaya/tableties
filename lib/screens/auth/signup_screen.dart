@@ -8,8 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final SignUpBloc signUpBloc = BlocProvider.of<SignUpBloc>(context);
     return BlocProvider(
-      create: (context) => SignUpBloc(repository: SignUpRepository()),
+      create: (context) => signUpBloc,
       child: SignUpForm(),
     );
   }

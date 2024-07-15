@@ -1,19 +1,20 @@
 import 'dart:convert';
+
 import 'package:TableTies/dio_client.dart';
-import 'package:TableTies/resource.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SignUpRepository {
-  final Dio _dio = DioClient().dio;
+  final DioClient client;
 
-  Future<Resource<String>> signUp(
-      String fullName, String email, String password) async {
+  SignUpRepository({required this.client});
+
+  Future<String> signUp(String fullName, String email, String password) async {
     final projectId = dotenv.env['STYTCH_PROJECT_ID'];
     final secret = dotenv.env['STYTCH_SECRET'];
 
     try {
-      final response = await _dio.post(
+      final response = await client.dio.post(
         'https://test.stytch.com/v1/passwords',
         options: Options(
           headers: {
@@ -32,12 +33,12 @@ class SignUpRepository {
       );
 
       if (response.statusCode == 200) {
-        return Resource.success(response.data.toString());
+        return response.data.toString(); // Return the JSON string
       } else {
-        return Resource.failure('Sign up failed');
+        throw Exception('Sign up failed');
       }
     } catch (e) {
-      return Resource.failure('An error occurred: ${e.toString()}');
+      throw Exception('An error occurred: ${e.toString()}');
     }
   }
 }

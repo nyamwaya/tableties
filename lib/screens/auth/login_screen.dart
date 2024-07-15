@@ -3,7 +3,6 @@ import 'package:TableTies/blocs/login/login_button_pressed.dart';
 import 'package:TableTies/blocs/login/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dio/dio.dart';
 
 class LoginScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -12,8 +11,9 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
     return BlocProvider(
-      create: (context) => LoginBloc(dio: Dio()),
+      create: (context) => loginBloc,
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
