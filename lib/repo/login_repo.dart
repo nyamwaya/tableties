@@ -9,7 +9,7 @@ class LoginRepository {
 
   LoginRepository({required this.client});
 
-  Future<String> login(String email, String password) async {
+  Future<Map<String, dynamic>> login(String email, String password) async {
     final projectId = dotenv.env['STYTCH_PROJECT_ID'];
     final secret = dotenv.env['STYTCH_SECRET'];
 
@@ -30,7 +30,7 @@ class LoginRepository {
       );
 
       if (response.statusCode == 200) {
-        return response.data.toString();
+        return response.data;
       } else {
         throw Exception('Login Failed');
       }

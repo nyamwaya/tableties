@@ -9,7 +9,8 @@ class SignUpRepository {
 
   SignUpRepository({required this.client});
 
-  Future<String> signUp(String fullName, String email, String password) async {
+  Future<Map<String, dynamic>> signUp(
+      String fullName, String email, String password) async {
     final projectId = dotenv.env['STYTCH_PROJECT_ID'];
     final secret = dotenv.env['STYTCH_SECRET'];
 
@@ -33,7 +34,7 @@ class SignUpRepository {
       );
 
       if (response.statusCode == 200) {
-        return response.data.toString(); // Return the JSON string
+        return response.data; // Return the JSON string
       } else {
         throw Exception('Sign up failed');
       }
