@@ -17,6 +17,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   ) async {
     emit(LoginLoading());
     var data = await repository.login(event.email, event.password);
+    //saveUserSession(data.)
     emit(LoginSuccess(data));
     try {} catch (e) {
       emit(LoginFailure(error: e.toString()));

@@ -1,7 +1,7 @@
 import 'package:TableTies/app.dart';
 import 'package:TableTies/blocs/login/login_bloc.dart';
 import 'package:TableTies/blocs/signup/sign_up_bloc.dart';
-import 'package:TableTies/dio_client.dart';
+import 'package:TableTies/services/dio_client.dart';
 import 'package:TableTies/repo/login_repo.dart';
 import 'package:TableTies/repo/sign_up_repo.dart';
 import 'package:flutter/material.dart';

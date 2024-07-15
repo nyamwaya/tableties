@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:TableTies/dio_client.dart';
+import 'package:TableTies/services/dio_client.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
