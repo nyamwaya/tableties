@@ -81,7 +81,7 @@ class TableTiesApp extends StatelessWidget {
       case '/onboarding':
         return IntroScreen();
       case '/home':
-        return HomePage(); // Replace with your home screen widget
+        return HomeScreen(); // Replace with your home screen widget
       case '/login':
       default:
         return LoginScreen();
