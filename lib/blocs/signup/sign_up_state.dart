@@ -1,0 +1,30 @@
+import 'package:equatable/equatable.dart';
+
+abstract class SignUpState extends Equatable {
+  const SignUpState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class SignUpInitial extends SignUpState {}
+
+class SignUpLoading extends SignUpState {}
+
+class SignUpSuccess extends SignUpState {
+  final String response; // Adjust the type as per your response
+
+  SignUpSuccess(this.response);
+
+  @override
+  List<Object> get props => [response];
+}
+
+class SignUpFailure extends SignUpState {
+  final String error;
+
+  const SignUpFailure(this.error);
+
+  @override
+  List<Object> get props => [error];
+}
