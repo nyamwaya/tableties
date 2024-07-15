@@ -10,12 +10,12 @@ class LoginRepository {
   LoginRepository({required this.client});
 
   Future<String> login(String email, String password) async {
-    final projectId = dotenv.env[dotenv.env['STYTCH_PROJECT_ID']];
-    final secret = dotenv.env[dotenv.env['STYTCH_SECRET']];
+    final projectId = dotenv.env['STYTCH_PROJECT_ID'];
+    final secret = dotenv.env['STYTCH_SECRET'];
 
     try {
       final response = await client.dio.post(
-        'https://api.stytch.com/v1/passwords/authenticate',
+        'https://test.stytch.com/v1/passwords/authenticate',
         options: Options(
           headers: {
             'Content-Type': 'application/json',
