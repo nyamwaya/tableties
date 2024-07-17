@@ -2,6 +2,7 @@ import 'package:TableTies/screens/auth/login_screen.dart';
 import 'package:TableTies/screens/auth/signup_screen.dart';
 import 'package:TableTies/screens/home/home_screen.dart';
 import 'package:TableTies/screens/intro_screen.dart';
+import 'package:TableTies/screens/match/matched_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,6 +37,9 @@ class TableTiesApp extends StatelessWidget {
               '/onboarding': (context) => IntroScreen(),
               '/login': (context) => LoginScreen(),
               '/signup': (context) => SignUpPage(),
+              '/matched': (context) => MatchedPage(),
+              // '/settings': (context) =>,
+
               // Add other routes as needed
             },
           );
@@ -81,7 +85,7 @@ class TableTiesApp extends StatelessWidget {
       case '/onboarding':
         return IntroScreen();
       case '/home':
-        return HomeScreen(); // Replace with your home screen widget
+        return HomePage(); // Replace with your home screen widget
       case '/login':
       default:
         return LoginScreen();
