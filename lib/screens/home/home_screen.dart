@@ -9,71 +9,110 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        title: Text('MESA',
-            style: GoogleFonts.montserrat(
-                color: Colors.black, fontWeight: FontWeight.bold)),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Icon(Icons.notifications_none, color: Colors.black),
-                Positioned(
-                  top: 10,
-                  right: 0,
-                  child: Container(
-                    width: 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
-                    ),
+      // appBar: AppBar(
+      //   elevation: 0,
+      //   backgroundColor: Colors.white,
+      //   title: Text('Minn',
+      //       style: GoogleFonts.montserrat(
+      //           color: Colors.black, fontWeight: FontWeight.bold)),
+      //   actions: [
+      //     Padding(
+      //       padding: const EdgeInsets.only(right: 16.0),
+      //       child: Stack(
+      //         alignment: Alignment.center,
+      //         children: [
+      //           Icon(Icons.notifications_none, color: Colors.black),
+      //           Positioned(
+      //             top: 10,
+      //             right: 0,
+      //             child: Container(
+      //               width: 8,
+      //               height: 8,
+      //               decoration: BoxDecoration(
+      //                 color: Colors.red,
+      //                 shape: BoxShape.circle,
+      //               ),
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //   ],
+      // ),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            //   child: Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Text('Minneapolis, MN',
+            //           style: GoogleFonts.montserrat(
+            //               fontSize: 20, fontWeight: FontWeight.bold)),
+            //       TextButton.icon(
+            //         icon: Icon(Icons.location_on, color: Colors.red, size: 16),
+            //         label: Text('Change Location',
+            //             style: GoogleFonts.montserrat(
+            //                 color: Colors.grey, fontSize: 14)),
+            //         onPressed: () {
+            //           // Handle change location
+            //         },
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            SizedBox(
+              height: 24,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Minneapolis, MN',
+                        style: GoogleFonts.montserrat(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          //navigate to the next gesture detector.
+                        },
+                        child: Text(
+                          '📍 Change Location',
+                          style: GoogleFonts.montserrat(
+                              fontSize: 14, color: Colors.grey),
+                        ),
+                      )
+                    ],
                   ),
-                ),
-              ],
+                  Icon(Icons.notifications_none, color: Colors.black),
+                ],
+              ),
             ),
-          ),
-        ],
+
+            SizedBox(
+              height: 24,
+            ),
+            Expanded(
+              child: CustomScrollView(
+                slivers: [
+                  _buildStickyHeader('Scheduled'),
+                  _buildEventsList(['New to Town Dinner']),
+                  _buildStickyHeader('Upcoming'),
+                  _buildEventsList(['Rising Stars Dinner', 'Girls Dinner']),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Minneapolis, MN',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 20, fontWeight: FontWeight.bold)),
-                TextButton.icon(
-                  icon: Icon(Icons.location_on, color: Colors.red, size: 16),
-                  label: Text('Change Location',
-                      style: GoogleFonts.montserrat(
-                          color: Colors.grey, fontSize: 14)),
-                  onPressed: () {
-                    // Handle change location
-                  },
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: CustomScrollView(
-              slivers: [
-                _buildStickyHeader('Scheduled'),
-                _buildEventsList(['New to Town Dinner']),
-                _buildStickyHeader('Upcoming'),
-                _buildEventsList(['Rising Stars Dinner', 'Girls Dinner']),
-              ],
-            ),
-          ),
-        ],
-      ),
+
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.blue,

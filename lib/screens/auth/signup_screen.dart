@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:TableTies/blocs/signup/sign_up_bloc.dart';
 import 'package:TableTies/blocs/signup/sign_up_event.dart';
 import 'package:TableTies/blocs/signup/sign_up_state.dart';
@@ -49,9 +51,21 @@ class _SignUpFormState extends State<SignUpForm> {
       body: BlocListener<SignUpBloc, SignUpState>(
         listener: (context, state) {
           if (state is SignUpSuccess) {
+            // Decode the JSON string back to a Map
+            final dbResponse =
+                jsonDecode(state.response) as Map<String, dynamic>;
+
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Sign up successful')),
+              SnackBar(content: Text("Sign-up successful!")),
             );
+
+            Future.delayed(Duration(seconds: 1), () {
+              Navigator.pushNamed(
+                context,
+                '/home',
+                arguments: dbResponse,
+              );
+            });
           } else if (state is SignUpFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.error)),

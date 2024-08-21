@@ -37,6 +37,7 @@ class TableTiesApp extends StatelessWidget {
               '/onboarding': (context) => IntroScreen(),
               '/login': (context) => LoginScreen(),
               '/signup': (context) => SignUpPage(),
+              '/home': (context) => HomePage(),
               '/matched': (context) => MatchedPage(),
               // '/settings': (context) =>,
 
