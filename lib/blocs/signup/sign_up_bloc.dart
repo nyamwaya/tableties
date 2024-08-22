@@ -54,7 +54,9 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         // Deserialize the map into a UserSupabase object
         final user = UserSupabase.fromJson(userData);
 
+        // cache the user id and user object.
         saveUserSession(data['user_id']);
+        saveUserObject(user.toJson().toString());
         emit(SignUpSuccess(jsonEncode(user.toJson())));
       } else {
         emit(SignUpFailure('Failed to insert user in Supabase'));
