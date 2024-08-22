@@ -1,8 +1,9 @@
 import 'dart:convert';
 
+import 'package:TableTies/data_models/user_supabase.dart';
 import 'package:TableTies/repo/sign_up_repo.dart';
 import 'package:TableTies/repo/supabase_repo.dart';
-import 'package:TableTies/utils.dart';
+import 'package:TableTies/utils/utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'sign_up_event.dart';
@@ -46,9 +47,15 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
       // there can be a senario where stytch returns a 200
       if (dbResponse != null) {
+        // Assuming dbResponse is a List<dynamic>
+        final userData = dbResponse[0]
+            as Map<String, dynamic>; // Extract the first (and only) map
+
+        // Deserialize the map into a UserSupabase object
+        final user = UserSupabase.fromJson(userData);
+
         saveUserSession(data['user_id']);
-        //  you need to have a data object for the db response
-        emit(SignUpSuccess(jsonEncode(dbResponse)));
+        emit(SignUpSuccess(jsonEncode(user.toJson())));
       } else {
         emit(SignUpFailure('Failed to insert user in Supabase'));
       }

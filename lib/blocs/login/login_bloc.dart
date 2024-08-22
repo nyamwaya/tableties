@@ -7,7 +7,7 @@ import 'package:TableTies/models/login_response.dart';
 import 'package:TableTies/repo/login_repo.dart';
 import 'package:TableTies/repo/supabase_repo.dart';
 import 'package:TableTies/services/preferences_service.dart';
-import 'package:TableTies/utils.dart';
+import 'package:TableTies/utils/utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
