@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:TableTies/blocs/login/login_button_pressed.dart';
-import 'package:TableTies/blocs/login/login_event.dart';
-import 'package:TableTies/blocs/login/login_state.dart';
+import 'package:TableTies/events/login_button_pressed.dart';
+import 'package:TableTies/events/login_event.dart';
+import 'package:TableTies/state/login_state.dart';
 import 'package:TableTies/models/login_response.dart';
 import 'package:TableTies/repo/login_repo.dart';
 import 'package:TableTies/repo/supabase_repo.dart';

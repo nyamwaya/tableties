@@ -1,3 +1,4 @@
+import 'package:TableTies/utils/resource.dart';
 import 'package:http/http.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -37,5 +38,21 @@ class SupabaseRepository {
     }
   }
 
-  // Add more methods as needed
+  // get user by id
+  Future<dynamic> getUserById({required String userId}) async {
+    try {
+      Resource.loading();
+      final user = await _client
+          .from('users')
+          .select('*') // Select all columns
+          .eq('id', userId); // Filter by the 'id' column matching the userId
+      print('Supabase retrived user successfuly: $user');
+
+      return Resource.success(user);
+    } catch (e) {
+      print('Supabase get user by id error: $e');
+      return Resource.failure(
+          e.toString()); // Return a Resource with the error message
+    }
+  }
 }

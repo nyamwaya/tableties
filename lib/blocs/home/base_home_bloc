@@ -1,0 +1,9 @@
+// Generic HomeBloc class
+abstract class BaseHomeBLoc<T> extends Bloc<HomeEvent, HomeState<Resource<T>>> {
+  HomeBloc() : super(Initial());
+
+  // Abstract methods to be implemented by subclasses
+  Future<Resource<T>> fetchData();
+  Future<T?> getCachedData();
+  Future<void> cacheData(T data);
+}

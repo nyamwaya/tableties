@@ -1,28 +1,18 @@
-import 'package:equatable/equatable.dart';
+// Generic HomeState classes
+import 'package:TableTies/utils/resource.dart';
 
-abstract class HomeState extends Equatable {
-  const HomeState();
+abstract class HomeState<T> {}
 
-  @override
-  List<Object> get props => [];
+class HomeInitial<T> extends HomeState<T> {}
+
+class HomeLoading<T> extends HomeState<T> {}
+
+class HomeSuccess<T> extends HomeState<T> {
+  final Resource<T> resource;
+  HomeSuccess(this.resource);
 }
 
-class HomeInitial extends HomeState {}
-
-class HomeLoaded extends HomeState {
-  final String message;
-
-  const HomeLoaded(this.message);
-
-  @override
-  List<Object> get props => [message];
-}
-
-class HomeError extends HomeState {
-  final String error;
-
-  const HomeError(this.error);
-
-  @override
-  List<Object> get props => [error];
+class HomeFailure<T> extends HomeState<T> {
+  final Resource<T> resource;
+  HomeFailure(this.resource);
 }
