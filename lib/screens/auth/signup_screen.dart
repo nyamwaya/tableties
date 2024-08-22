@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:TableTies/blocs/signup/sign_up_bloc.dart';
 import 'package:TableTies/blocs/signup/sign_up_event.dart';
 import 'package:TableTies/blocs/signup/sign_up_state.dart';
+import 'package:TableTies/data_models/user_supabase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -49,9 +52,20 @@ class _SignUpFormState extends State<SignUpForm> {
       body: BlocListener<SignUpBloc, SignUpState>(
         listener: (context, state) {
           if (state is SignUpSuccess) {
+            // Deserialize the JSON string to a User object
+            final user = UserSupabase.fromJson(jsonDecode(state.response));
+
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Sign up successful')),
+              SnackBar(content: Text("Sign-up successful!")),
             );
+
+            Future.delayed(Duration(seconds: 1), () {
+              Navigator.pushNamed(
+                context,
+                '/home',
+                arguments: user,
+              );
+            });
           } else if (state is SignUpFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.error)),
