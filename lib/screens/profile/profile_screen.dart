@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:TableTies/data_models/user_profile_model.dart';
 import 'package:TableTies/data_models/user_supabase.dart';
 import 'package:TableTies/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +31,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final profileBloc = BlocProvider.of<ProfileBloc>(context);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      profileBloc.add(DisplayUserFromMemory());
+      profileBloc.add(LoadUserProfile());
     });
+
+    // @override
+    // void initState() {
+    //   super.initState();
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     final profileBloc = BlocProvider.of<ProfileBloc>(context);
+    //     final currentState = profileBloc.state;
+
+    //     if (currentState is ProfileInitial) {
+    //       // Load data only if it's the initial state (no data loaded yet)
+    //       profileBloc.add(LoadUserProfile());
+    //     }
+    //     // else {
+    //     //   // You might want to handle other scenarios here, like refreshing data after an update
+    //     // }
+    //   });
+    // }
 
     return Scaffold(
         body: SafeArea(
@@ -46,10 +64,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             } else if (state is ProfileLoading) {
               return Text('Profile Loading: ${state.props.first}');
             } else if (state is ProfileLoaded) {
-              // this should be an example of how we get valid json to and from the response.
-              final userData = jsonDecode(state.props.first as String);
-              final user = UserSupabase.fromJson(userData);
+              // final userData = state.props.first as String;
+              // final user = UserSupabase.fromJson(jsonDecode(userData));
 
+              final user = state.userProfile;
+
+              // return Text('User name: ${user.firstName} ${user.lastName}');
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -60,8 +80,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   buildInterestsSection(randomInterests)
                 ],
               );
-
-              // return Text('User name: ${user.firstName} ${user.lastName}');
             } else if (state is ProfileError) {
               return Text('Profile Error: ${state.props.first}');
             } else {
@@ -74,7 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-Widget buildHeader(UserSupabase user, BuildContext context) {
+Widget buildHeader(UserProfile user, BuildContext context) {
   return Column(
     children: [
       Row(
@@ -140,7 +158,7 @@ Widget buildHeader(UserSupabase user, BuildContext context) {
   );
 }
 
-Widget buildBioSection(UserSupabase user) {
+Widget buildBioSection(UserProfile user) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [

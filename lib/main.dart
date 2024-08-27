@@ -2,6 +2,7 @@ import 'package:TableTies/app.dart';
 import 'package:TableTies/blocs/home/home_bloc.dart';
 import 'package:TableTies/blocs/login/login_bloc.dart';
 import 'package:TableTies/blocs/signup/sign_up_bloc.dart';
+import 'package:TableTies/repo/profile_repo.dart';
 import 'package:TableTies/repo/supabase_repo.dart';
 import 'package:TableTies/services/dio_client.dart';
 import 'package:TableTies/repo/login_repo.dart';
@@ -42,6 +43,8 @@ Future<void> main() async {
   // Create repositories with the singleton DioClient
   final loginRepository = LoginRepository(client: client);
   final singupRepository = SignUpRepository(client: client);
+  final profileRepository =
+      ProfileREpository(supabaseRepository: supabaseRepository);
 
   runApp(MultiBlocProvider(
     providers: [
@@ -59,7 +62,7 @@ Future<void> main() async {
               HomeBloc(supabaseRepository: supabaseRepository)),
       BlocProvider(
           create: (context) =>
-              ProfileBloc(supabaseRepository: supabaseRepository))
+              ProfileBloc(profileREpository: profileRepository))
     ],
     child: TableTiesApp(),
   ));

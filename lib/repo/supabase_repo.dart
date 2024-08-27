@@ -2,6 +2,7 @@ import 'package:TableTies/data_models/user_supabase.dart';
 import 'package:TableTies/utils/resource.dart';
 import 'package:http/http.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'dart:convert';
 
 class SupabaseRepository {
   final SupabaseClient _client;
@@ -111,5 +112,95 @@ class SupabaseRepository {
     }
   }
 
-  // the cache this new state.
+  // Function to fetch user interests and build a response
+  Future<Resource<String>> getUserInterests({required String userId}) async {
+    try {
+      // Query the user_interests table for the given user
+      final response = await _client
+          .from('user_interests')
+          .select('interests')
+          .eq('user_id', userId)
+          .limit(1)
+          .maybeSingle();
+
+      // If no data is found, return a success response with "no data"
+      if (response == null || response['interests'] == null) {
+        return Resource.success("User has no interests");
+      }
+
+      // Convert the interests to a list of integers
+      List<String> interestUUIDs = List<String>.from(response['interests']);
+
+      // return Resource.success(interestIds.toList() as String);
+      // Build and return the detailed interests response
+      return Resource.success(await _buildInterestsResponse(interestUUIDs));
+    } catch (e) {
+      print('Error fetching user interests: $e');
+      return Resource.failure(
+          'Failed to fetch user interests: ${e.toString()}');
+    }
+  }
+
+  // Function to build a detailed response for a list of interest IDs
+  Future<String> _buildInterestsResponse(List<String> interestUUIDs) async {
+    List<Map<String, dynamic>> interestsData = [];
+
+    // Fetch detailed data for each interest ID
+    for (String interestId in interestUUIDs) {
+      final interestData = await _getInterestData(interestId);
+      if (interestData != null) {
+        interestsData.add(interestData);
+      }
+    }
+
+    // Convert the list of interest data to a JSON string
+    return json.encode(interestsData);
+  }
+
+  // Function to fetch detailed data for a single interest
+  Future<Map<String, dynamic>?> _getInterestData(String interestId) async {
+    try {
+      // Query the interests table for the given interest ID
+      final interestResponse = await _client
+          .from('interests')
+          .select('id, name, category_id')
+          .eq('id', interestId)
+          .single();
+
+      if (interestResponse == null) return null;
+
+      // Fetch the category name for this interest
+      final categoryName =
+          await _getCategoryName(interestResponse['category_id']);
+
+      // Build and return a map with interest and category details
+      return {
+        'interest_id': interestResponse['id'],
+        'interest_name': interestResponse['name'],
+        'category_id': interestResponse['category_id'],
+        'category_name': categoryName,
+      };
+    } catch (e) {
+      print('Error fetching interest data: $e');
+      return null;
+    }
+  }
+
+  // Function to fetch the category name for a given category ID
+  Future<String> _getCategoryName(String categoryId) async {
+    try {
+      // Query the categories table for the given category ID
+      final categoryResponse = await _client
+          .from('categories')
+          .select('name')
+          .eq('id', categoryId)
+          .single();
+
+      final categoryResult = categoryResponse['name'] ?? 'Unknown Category';
+      return categoryResult;
+    } catch (e) {
+      print('Error fetching category name: $e');
+      return 'Unknown Category';
+    }
+  }
 }

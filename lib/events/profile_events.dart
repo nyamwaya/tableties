@@ -13,3 +13,16 @@ class DisplayUserFromMemory extends ProfileEvent {
   @override
   List<Object> get props => [];
 }
+
+class BuildUserInterests extends ProfileEvent {
+  final String userId;
+
+  const BuildUserInterests({required this.userId});
+
+  @override
+  List<Object> get props => [userId];
+}
+
+class LoadUserProfile extends ProfileEvent {
+  LoadUserProfile();
+}

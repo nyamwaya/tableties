@@ -1,11 +1,14 @@
+import 'package:TableTies/data_models/user_profile_model.dart';
 import 'package:TableTies/utils/resource.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class ProfileState extends Equatable {
-  const ProfileState();
+  final UserProfile? userProfile; // Add userProfile as a field
+
+  const ProfileState({this.userProfile}); // Add named parameter in constructor
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [userProfile];
 }
 
 class ProfileInitial extends ProfileState {
@@ -19,11 +22,12 @@ class ProfileInitial extends ProfileState {
 class ProfileLoading extends ProfileState {}
 
 class ProfileLoaded extends ProfileState {
-  final String user;
-  const ProfileLoaded(this.user);
+  final UserProfile userProfile;
+  const ProfileLoaded(this.userProfile)
+      : super(userProfile: userProfile); // Pass as named argument
 
   @override
-  List<Object> get props => [user];
+  List<Object?> get props => [userProfile];
 }
 
 class ProfileError extends ProfileState {
