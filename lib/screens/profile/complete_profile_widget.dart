@@ -9,7 +9,7 @@ class CompleteProfileWidget extends StatelessWidget {
   String _formatMissingFields(List<String>? fields) {
     if (fields == null) return '';
     return fields.map((field) {
-      if (field == 'photo') return 'display profile picture';
+      if (field == 'photo') return 'profile picture';
       if (field == 'user_interests') return 'interests';
       return field;
     }).join(", ");
