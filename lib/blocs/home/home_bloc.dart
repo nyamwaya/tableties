@@ -17,7 +17,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       final userId = await returnValidUserId(event.userId);
       final user = await supabaseRepository.getUserById(userId: userId);
-      emit(HomeSuccess(Resource.success(user)));
+      final userModel = user.data;
+      emit(HomeSuccess(Resource.success(userModel)));
     } catch (e) {
       emit(HomeFailure(Resource.failure("An error occurred: ${e.toString()}")));
     }
