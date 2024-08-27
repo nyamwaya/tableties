@@ -11,6 +11,7 @@ class UserSupabase {
   final String? birthday;
   final String createdAt;
   final String lastName;
+  final String? profilePhoto; // Add this line
 
   UserSupabase({
     required this.id,
@@ -23,6 +24,7 @@ class UserSupabase {
     this.birthday,
     required this.createdAt,
     required this.lastName,
+    this.profilePhoto, // Add this line
   });
 
   // Convert JSON to User object
@@ -38,6 +40,7 @@ class UserSupabase {
       birthday: json['birthday'],
       createdAt: json['created_at'],
       lastName: json['last_name'],
+      profilePhoto: json['profile_photo'], // Add this line
     );
   }
 
@@ -54,6 +57,7 @@ class UserSupabase {
       'birthday': birthday,
       'created_at': createdAt,
       'last_name': lastName,
+      'profile_photo': profilePhoto, // Add this line
     };
   }
 

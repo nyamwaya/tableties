@@ -44,7 +44,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  buildHeader(),
+                  buildHeader(user),
                 ],
               );
 
@@ -61,7 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-Widget buildHeader() {
+Widget buildHeader(UserSupabase user) {
   return Column(
     children: [
       Row(
@@ -89,14 +89,14 @@ Widget buildHeader() {
       ),
       SizedBox(height: 16),
       Text(
-        'Katrisa Feona',
+        '${user.firstName} ${user.lastName}',
         style: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
         ),
       ),
       Text(
-        'Software Engineer',
+        '${user.occupation ?? 'Enter your occupation'}',
         style: TextStyle(
           fontSize: 16,
           color: Colors.grey,
