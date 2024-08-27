@@ -63,7 +63,7 @@ class _SignUpFormState extends State<SignUpForm> {
               Navigator.pushNamed(
                 context,
                 '/home',
-                arguments: user,
+                arguments: user.id,
               );
             });
           } else if (state is SignUpFailure) {

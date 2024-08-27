@@ -5,7 +5,9 @@ abstract class HomeState<T> {}
 
 class HomeInitial<T> extends HomeState<T> {}
 
-class HomeLoading<T> extends HomeState<T> {}
+class HomeLoading<T> extends HomeState<T> {
+  HomeLoading(String s);
+}
 
 class HomeSuccess<T> extends HomeState<T> {
   final Resource<T> resource;

@@ -1,4 +1,5 @@
 import 'package:TableTies/app.dart';
+import 'package:TableTies/blocs/home/home_bloc.dart';
 import 'package:TableTies/blocs/login/login_bloc.dart';
 import 'package:TableTies/blocs/signup/sign_up_bloc.dart';
 import 'package:TableTies/repo/supabase_repo.dart';
@@ -52,6 +53,9 @@ Future<void> main() async {
                 repository: singupRepository,
                 supabaseRepository: supabaseRepository,
               )),
+      BlocProvider(
+          create: (context) =>
+              HomeBloc(supabaseRepository: supabaseRepository)),
     ],
     child: TableTiesApp(),
   ));

@@ -10,8 +10,11 @@ abstract class HomeEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class CacheUser extends HomeEvent {
-  CacheUser(UserSupabase user);
-}
+class FetchUserById extends HomeEvent {
+  final String userId;
 
-class FetchUserById extends HomeEvent {}
+  const FetchUserById({required this.userId});
+
+  @override
+  List<Object> get props => [userId];
+}
