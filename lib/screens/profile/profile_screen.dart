@@ -19,22 +19,20 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  List<String> randomInterests = [
-    'Travel',
-    'Big Foodie',
-    'Photography',
-    'Bollywood Movie',
-    'Shahrukh Khan'
-  ];
+  bool isEditing = false;
+
+  void toggleEditState() {
+    setState(() {
+      isEditing = !isEditing;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    // before
     final profileBloc = BlocProvider.of<ProfileBloc>(context);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      profileBloc.add(LoadUserProfile());
-    });
-
+// new approah i am concidering.
     // @override
     // void initState() {
     //   super.initState();
@@ -61,8 +59,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
           builder: (context, state) {
             // Your UI based on the ProfileState
             if (state is ProfileInitial) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                profileBloc.add(LoadUserProfile());
+              });
+
               return Center(child: CircularProgressIndicator());
             } else if (state is ProfileLoading) {
+              // everytime we are coming to this screen we are loading the data and making api calls.
+              // we need to come up with a candance where we at least retreive the last UserModel saved in shared prefs
+              // or at least whatever object we have in the state. because the only things that are truly changing is when a user
+              // updates thier profile information.
+              // or when a user is logged out and we have to log them back in.
+              // and also when a user signs up for an event.  this is rediculous but for now we can do.
               return Text('Profile Loading: ${state.props.first}');
             } else if (state is ProfileLoaded) {
               // final userData = state.props.first as String;
@@ -74,9 +82,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  buildHeader(user, context),
+                  buildHeader(user, context, isEditing, toggleEditState),
                   SizedBox(height: 24),
-                  buildBioSection(user),
+                  buildBioSection(user, isEditing),
                   SizedBox(height: 24),
                   buildInterestsSection(user.interests)
                 ],
@@ -93,73 +101,106 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-Widget buildHeader(UserProfile user, BuildContext context) {
+Widget buildHeader(UserProfile user, BuildContext context, bool isEditing,
+    VoidCallback toggleEditState) {
   return Column(
     children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              // Handle back button press
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () {
-              // Handle settings button press
-            },
-          ),
+          // Conditionally render the back arrow button
+          if (!isEditing)
+            IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+              },
+            ),
+          // Conditionally render the settings button
+          if (!isEditing)
+            IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () {
+                // Handle settings button press
+              },
+            ),
         ],
       ),
       SizedBox(height: 16),
       CircleAvatar(
-        radius: 50,
-        backgroundImage: user.profilePhoto != null &&
-                user.profilePhoto?.isNotEmpty == true
-            ? NetworkImage(user.profilePhoto!)
-            : const AssetImage(
-                'assets/images/profile_image.jpeg'), // Replace with actual image path
-      ),
+          // ... (rest of the CircleAvatar code remains the same)
+          ),
       SizedBox(height: 16),
-      Text(
-        '${user.firstName} ${user.lastName}',
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      Text(
-        '${user.occupation ?? 'Enter your occupation'}',
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.grey,
-        ),
-      ),
-      SizedBox(height: 16),
-      ElevatedButton(
-        child: Text('Edit Profile'),
-        onPressed: () {
-          // Handle edit profile button press
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+
+      // Conditionally render the name as text or text fields
+      if (isEditing)
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: TextEditingController(text: user.firstName),
+                decoration: InputDecoration(hintText: 'Enter your first name'),
+              ),
+            ),
+            SizedBox(width: 8),
+            Expanded(
+              child: TextField(
+                controller: TextEditingController(text: user.lastName),
+                decoration: InputDecoration(hintText: 'Enter your last name'),
+              ),
+            ),
+          ],
+        )
+      else
+        Text(
+          '${user.firstName} ${user.lastName}',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
         ),
+
+      // Conditionally render the occupation as text or a text field
+      if (isEditing)
+        TextField(
+          controller: TextEditingController(text: user.occupation),
+          decoration: InputDecoration(hintText: 'Enter your occupation'),
+        )
+      else
+        Text(
+          '${user.occupation ?? 'Enter your occupation'}',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey,
+          ),
+        ),
+
+      SizedBox(height: 16),
+
+      // Change the button text based on the edit state
+      ElevatedButton(
+        child: Text(isEditing ? 'Save Changes' : 'Edit Profile'),
+        onPressed: () {
+          // Toggle the edit state
+          toggleEditState();
+
+          // If saving changes, you'd typically update the user profile here
+          if (!isEditing) {
+            // ... (logic to save the changes to the profile)
+          }
+        },
+        // ... (rest of the ElevatedButton code remains the same)
       ),
     ],
   );
 }
 
-Widget buildBioSection(UserProfile user) {
+Widget buildBioSection(UserProfile user, bool isEditing) {
+  TextEditingController _bioController = TextEditingController(text: user.bio);
+
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -177,14 +218,25 @@ Widget buildBioSection(UserProfile user) {
           border: Border.all(color: Colors.black),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Text(
-          user.bio ??
-              'Add a bio to make a great first impression! Edit your profile to get started.',
-          style: TextStyle(
-            fontSize: 16,
-            color: user.bio != null ? Colors.black : Colors.grey,
-          ),
-        ),
+        child: isEditing
+            ? TextField(
+                controller: _bioController,
+                maxLines: null, // Allow the TextField to expand as needed
+                decoration: InputDecoration(
+                  border:
+                      InputBorder.none, // Remove the default TextField border
+                  hintText: 'Add a bio to make a great first impression!',
+                  hintStyle: TextStyle(color: Colors.grey),
+                ),
+              )
+            : Text(
+                user.bio ??
+                    'Add a bio to make a great first impression! Edit your profile to get started.',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: user.bio != null ? Colors.black : Colors.grey,
+                ),
+              ),
       ),
     ],
   );
