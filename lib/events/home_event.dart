@@ -18,3 +18,10 @@ class FetchUserById extends HomeEvent {
   @override
   List<Object> get props => [userId ?? ''];
 }
+
+class CheckProfileCompletion extends HomeEvent {
+  const CheckProfileCompletion();
+
+  @override
+  List<Object> get props => [];
+}

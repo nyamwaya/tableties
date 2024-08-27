@@ -11,6 +11,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   HomeBloc({required this.supabaseRepository}) : super(HomeInitial()) {
     on<FetchUserById>(_fetchUserById);
+    on<CheckProfileCompletion>(_checkProfileCompletion);
   }
 
   void _fetchUserById(FetchUserById event, Emitter<HomeState> emit) async {
@@ -21,6 +22,35 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(HomeSuccess(Resource.success(userModel)));
     } catch (e) {
       emit(HomeFailure(Resource.failure("An error occurred: ${e.toString()}")));
+    }
+  }
+
+  void _checkProfileCompletion(
+      CheckProfileCompletion event, Emitter<HomeState> emit) async {
+    try {
+      final userId = await returnValidUserId("");
+      final result = await supabaseRepository.isProfileComplete(userId: userId);
+
+      switch (result.status) {
+        case ResourceStatus.success:
+          if (result.data!.isEmpty) {
+            emit(HomeProfileComplete());
+          } else {
+            // maybe rename this to missing profile fields.
+            emit(HomeProfileIncomplete(missingFields: result.data!));
+          }
+          break;
+        case ResourceStatus.failure:
+          emit(HomeFailure(
+              Resource.failure("Profile check failed: ${result.error}")));
+          break;
+        case ResourceStatus.loading:
+          emit(HomeLoading("Checking profile completion"));
+          break;
+      }
+    } catch (e) {
+      emit(HomeFailure(Resource.failure(
+          "An error occurred while checking profile: ${e.toString()}")));
     }
   }
 

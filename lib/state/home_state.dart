@@ -18,3 +18,14 @@ class HomeFailure<T> extends HomeState<T> {
   final Resource<T> resource;
   HomeFailure(this.resource);
 }
+
+class HomeProfileComplete<T> extends HomeState<T> {
+  final Resource<bool> resource;
+  HomeProfileComplete() : resource = Resource.success(true);
+}
+
+class HomeProfileIncomplete<T> extends HomeState<T> {
+  final Resource<List<String>> resource;
+  HomeProfileIncomplete({required List<String> missingFields})
+      : resource = Resource.success(missingFields);
+}
