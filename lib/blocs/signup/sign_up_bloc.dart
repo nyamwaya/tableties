@@ -56,7 +56,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
         // cache the user id and user object.
         saveUserSession(data['user_id']);
-        saveUserObject(user.toJson().toString());
+        saveUserObject(jsonEncode(user.toJson()));
         emit(SignUpSuccess(jsonEncode(user.toJson())));
       } else {
         emit(SignUpFailure('Failed to insert user in Supabase'));

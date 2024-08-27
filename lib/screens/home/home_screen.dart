@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:TableTies/blocs/home/home_bloc.dart';
 import 'package:TableTies/events/home_event.dart';
 import 'package:TableTies/state/home_state.dart';
-import 'package:TableTies/screens/profile/complete_profile_widget.dart';
+import 'package:TableTies/widgets/complete_profile_widget.dart';
 
 class HomePage extends StatelessWidget {
   @override

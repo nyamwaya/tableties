@@ -5,6 +5,7 @@ import 'package:TableTies/screens/intro_screen.dart';
 import 'package:TableTies/screens/match/matched_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:TableTies/screens/profile/profile_screen.dart';
 
 class TableTiesApp extends StatelessWidget {
   const TableTiesApp({Key? key}) : super(key: key);
@@ -39,6 +40,7 @@ class TableTiesApp extends StatelessWidget {
               '/signup': (context) => SignUpPage(),
               '/home': (context) => HomePage(),
               '/matched': (context) => MatchedPage(),
+              '/profile': (context) => ProfileScreen(),
               // '/settings': (context) =>,
 
               // Add other routes as needed

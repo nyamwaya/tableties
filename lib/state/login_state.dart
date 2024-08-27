@@ -1,5 +1,6 @@
 // States
 import 'package:equatable/equatable.dart';
+import '../models/login_response.dart';
 
 abstract class LoginState extends Equatable {
   @override
@@ -11,7 +12,8 @@ class LoginInitial extends LoginState {}
 class LoginLoading extends LoginState {}
 
 class LoginSuccess extends LoginState {
-  LoginSuccess(String data);
+  final LoginResponse response;
+  LoginSuccess(this.response);
 }
 
 class LoginFailure extends LoginState {

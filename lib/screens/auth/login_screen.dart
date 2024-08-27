@@ -25,6 +25,13 @@ class LoginScreen extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Login successful')),
                   );
+
+                  //navigate to home. what we only have here is a user id.
+                  Navigator.pushNamed(
+                    context,
+                    '/home',
+                    arguments: state.response.userId,
+                  );
                 } else if (state is LoginFailure) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(state.error)),

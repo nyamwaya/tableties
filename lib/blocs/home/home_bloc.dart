@@ -5,6 +5,8 @@ import 'package:TableTies/events/home_event.dart';
 import 'package:TableTies/repo/supabase_repo.dart';
 import 'package:TableTies/utils/resource.dart';
 import 'package:TableTies/state/home_state.dart';
+import 'dart:convert';
+import 'package:TableTies/utils/user_upabase_json_utils.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final SupabaseRepository supabaseRepository;
@@ -19,6 +21,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       final userId = await returnValidUserId(event.userId);
       final user = await supabaseRepository.getUserById(userId: userId);
       final userModel = user.data;
+      // final fixedUser = user.data.toJson();
+
+      // Convert UserSupabase to Map<String, dynamic>
+      //final userMap = userModel.toJson();
+
+      // Convert Map to JSON string
+      // dont need this. there is a below function that serializes and deserializes user object
+      // final fixedUser = jsonEncode(userMap);
+
+      String jsonString = UserSupabaseJsonUtils.userSupabaseToJson(user.data);
+
+      // Save the user to SharedPreferences
+      saveUserObject(jsonString);
+
       emit(HomeSuccess(Resource.success(userModel)));
     } catch (e) {
       emit(HomeFailure(Resource.failure("An error occurred: ${e.toString()}")));
@@ -57,9 +73,5 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Future<String> returnValidUserId(String? userId) async {
     if (userId != null && userId.isNotEmpty) return userId;
     return await getUserId() ?? "";
-  }
-
-  void _cacheUser(String user) {
-    saveUserObject(user);
   }
 }

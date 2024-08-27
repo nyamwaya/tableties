@@ -45,7 +45,11 @@ class CompleteProfileWidget extends StatelessWidget {
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () {
-                      // TODO: Implement finish profile setup functionality
+                      // TODO: Implement take user to edit profile screen.
+                      Navigator.of(context).pushNamed(
+                        '/profile',
+                        arguments: {'editMode': true},
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepOrange,
