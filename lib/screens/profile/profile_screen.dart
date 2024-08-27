@@ -25,42 +25,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
 
     return Scaffold(
-      body: BlocBuilder<ProfileBloc, ProfileState>(
-        builder: (context, state) {
-          // Your UI based on the ProfileState
-          if (state is ProfileInitial) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is ProfileLoading) {
-            return Text('Profile Loading: ${state.props.first}');
-          } else if (state is ProfileLoaded) {
-            // this should be an example of how we get valid json to and from the response.
-            final userData = jsonDecode(state.props.first as String);
-            final user = UserSupabase.fromJson(userData);
+        body: SafeArea(
+            child: SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: BlocBuilder<ProfileBloc, ProfileState>(
+          builder: (context, state) {
+            // Your UI based on the ProfileState
+            if (state is ProfileInitial) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is ProfileLoading) {
+              return Text('Profile Loading: ${state.props.first}');
+            } else if (state is ProfileLoaded) {
+              // this should be an example of how we get valid json to and from the response.
+              final userData = jsonDecode(state.props.first as String);
+              final user = UserSupabase.fromJson(userData);
 
-            return Scaffold(
-              body: SafeArea(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        buildHeader(),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            );
-            // return Text('User name: ${user.firstName} ${user.lastName}');
-          } else if (state is ProfileError) {
-            return Text('Profile Error: ${state.props.first}');
-          } else {
-            return Container(); // Or your default UI
-          }
-        },
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildHeader(),
+                ],
+              );
+
+              // return Text('User name: ${user.firstName} ${user.lastName}');
+            } else if (state is ProfileError) {
+              return Text('Profile Error: ${state.props.first}');
+            } else {
+              return Container(); // Or your default UI
+            }
+          },
+        ),
       ),
-    );
+    )));
   }
 }
 
