@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:TableTies/data_models/interests_model.dart';
 import 'package:TableTies/data_models/user_profile_model.dart';
 import 'package:TableTies/data_models/user_supabase.dart';
 import 'package:TableTies/screens/home/home_screen.dart';
@@ -77,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   SizedBox(height: 24),
                   buildBioSection(user),
                   SizedBox(height: 24),
-                  buildInterestsSection(randomInterests)
+                  buildInterestsSection(user.interests)
                 ],
               );
             } else if (state is ProfileError) {
@@ -189,7 +190,7 @@ Widget buildBioSection(UserProfile user) {
   );
 }
 
-Widget buildInterestsSection(List<String> interests) {
+Widget buildInterestsSection(List<Interest> interests) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -207,7 +208,7 @@ Widget buildInterestsSection(List<String> interests) {
         children: interests.map((interest) {
           return Chip(
             label: Text(
-              interest,
+              interest.name,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
