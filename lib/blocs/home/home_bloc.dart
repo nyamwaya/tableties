@@ -24,8 +24,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  Future<String> returnValidUserId(String userId) async {
-    if (userId.isNotEmpty) return userId;
+  Future<String> returnValidUserId(String? userId) async {
+    if (userId != null && userId.isNotEmpty) return userId;
     return await getUserId() ?? "";
   }
 

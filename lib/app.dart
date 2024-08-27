@@ -73,7 +73,7 @@ class TableTiesApp extends StatelessWidget {
 
   Future<bool> _isActiveSession() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? sessionToken = prefs.getString('session_token');
+    String? sessionToken = prefs.getString('user_id');
     if (sessionToken != null && sessionToken.isNotEmpty) {
       return true;
     } else {

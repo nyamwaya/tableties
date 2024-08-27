@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
     final userId = ModalRoute.of(context)!.settings.arguments
-        as String; // Assuming user.id is a String
+        as String?; // Assuming user.id is a String
 
     // Trigger the FetchUserById event when the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {

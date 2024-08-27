@@ -11,10 +11,10 @@ abstract class HomeEvent extends Equatable {
 }
 
 class FetchUserById extends HomeEvent {
-  final String userId;
+  final String? userId;
 
   const FetchUserById({required this.userId});
 
   @override
-  List<Object> get props => [userId];
+  List<Object> get props => [userId ?? ''];
 }
