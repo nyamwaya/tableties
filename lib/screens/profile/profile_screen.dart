@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:TableTies/data_models/user_supabase.dart';
+import 'package:TableTies/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../widgets/profile/profile_picture_widget.dart';
@@ -16,6 +17,14 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  List<String> randomInterests = [
+    'Travel',
+    'Big Foodie',
+    'Photography',
+    'Bollywood Movie',
+    'Shahrukh Khan'
+  ];
+
   @override
   Widget build(BuildContext context) {
     final profileBloc = BlocProvider.of<ProfileBloc>(context);
@@ -44,7 +53,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  buildHeader(user),
+                  buildHeader(user, context),
+                  SizedBox(height: 24),
+                  buildBioSection(user),
+                  SizedBox(height: 24),
+                  buildInterestsSection(randomInterests)
                 ],
               );
 
@@ -61,7 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-Widget buildHeader(UserSupabase user) {
+Widget buildHeader(UserSupabase user, BuildContext context) {
   return Column(
     children: [
       Row(
@@ -71,6 +84,10 @@ Widget buildHeader(UserSupabase user) {
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               // Handle back button press
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
             },
           ),
           IconButton(
@@ -84,8 +101,11 @@ Widget buildHeader(UserSupabase user) {
       SizedBox(height: 16),
       CircleAvatar(
         radius: 50,
-        backgroundImage: AssetImage(
-            'assets/profile_image.png'), // Replace with actual image path
+        backgroundImage: user.profilePhoto != null &&
+                user.profilePhoto?.isNotEmpty == true
+            ? NetworkImage(user.profilePhoto!)
+            : const AssetImage(
+                'assets/images/profile_image.jpeg'), // Replace with actual image path
       ),
       SizedBox(height: 16),
       Text(
@@ -115,6 +135,74 @@ Widget buildHeader(UserSupabase user) {
             borderRadius: BorderRadius.circular(20),
           ),
         ),
+      ),
+    ],
+  );
+}
+
+Widget buildBioSection(UserSupabase user) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Bio',
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      SizedBox(height: 8),
+      Container(
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          user.bio ??
+              'Add a bio to make a great first impression! Edit your profile to get started.',
+          style: TextStyle(
+            fontSize: 16,
+            color: user.bio != null ? Colors.black : Colors.grey,
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget buildInterestsSection(List<String> interests) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Interests',
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      SizedBox(height: 8),
+      Wrap(
+        spacing: 8.0,
+        runSpacing: 8.0,
+        children: interests.map((interest) {
+          return Chip(
+            label: Text(
+              interest,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            backgroundColor: Colors.white,
+            shape: StadiumBorder(
+              side: BorderSide(
+                color: Colors.black,
+              ),
+            ),
+          );
+        }).toList(),
       ),
     ],
   );
