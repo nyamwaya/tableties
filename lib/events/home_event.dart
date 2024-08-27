@@ -1,3 +1,6 @@
+// home_event.dart
+
+import 'package:TableTies/data_models/user_supabase.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class HomeEvent extends Equatable {
@@ -7,11 +10,18 @@ abstract class HomeEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class InitializeHome extends HomeEvent {
-  final String message;
+class FetchUserById extends HomeEvent {
+  final String? userId;
 
-  const InitializeHome(this.message);
+  const FetchUserById({required this.userId});
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [userId ?? ''];
+}
+
+class CheckProfileCompletion extends HomeEvent {
+  const CheckProfileCompletion();
+
+  @override
+  List<Object> get props => [];
 }

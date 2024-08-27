@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:TableTies/blocs/signup/sign_up_bloc.dart';
-import 'package:TableTies/blocs/signup/sign_up_event.dart';
-import 'package:TableTies/blocs/signup/sign_up_state.dart';
+import 'package:TableTies/events/sign_up_event.dart';
+import 'package:TableTies/state/sign_up_state.dart';
 import 'package:TableTies/data_models/user_supabase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,7 +63,7 @@ class _SignUpFormState extends State<SignUpForm> {
               Navigator.pushNamed(
                 context,
                 '/home',
-                arguments: user,
+                arguments: user.id,
               );
             });
           } else if (state is SignUpFailure) {

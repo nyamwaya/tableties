@@ -6,8 +6,8 @@ import 'package:TableTies/repo/supabase_repo.dart';
 import 'package:TableTies/utils/utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'sign_up_event.dart';
-import 'sign_up_state.dart';
+import '../../events/sign_up_event.dart';
+import '../../state/sign_up_state.dart';
 import 'package:intl/intl.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
@@ -54,7 +54,9 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         // Deserialize the map into a UserSupabase object
         final user = UserSupabase.fromJson(userData);
 
+        // cache the user id and user object.
         saveUserSession(data['user_id']);
+        saveUserObject(jsonEncode(user.toJson()));
         emit(SignUpSuccess(jsonEncode(user.toJson())));
       } else {
         emit(SignUpFailure('Failed to insert user in Supabase'));

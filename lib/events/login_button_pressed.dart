@@ -1,4 +1,4 @@
-import 'package:TableTies/blocs/login/login_event.dart';
+import 'package:TableTies/events/login_event.dart';
 
 class LoginButtonPressed extends LoginEvent {
   final String email;

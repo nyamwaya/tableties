@@ -1,6 +1,6 @@
 import 'package:TableTies/blocs/login/login_bloc.dart';
-import 'package:TableTies/blocs/login/login_button_pressed.dart';
-import 'package:TableTies/blocs/login/login_state.dart';
+import 'package:TableTies/events/login_button_pressed.dart';
+import 'package:TableTies/state/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,6 +24,13 @@ class LoginScreen extends StatelessWidget {
                 if (state is LoginSuccess) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Login successful')),
+                  );
+
+                  //navigate to home. what we only have here is a user id.
+                  Navigator.pushNamed(
+                    context,
+                    '/home',
+                    arguments: state.response.userId,
                   );
                 } else if (state is LoginFailure) {
                   ScaffoldMessenger.of(context).showSnackBar(

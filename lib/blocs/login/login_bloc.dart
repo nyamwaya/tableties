@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:TableTies/blocs/login/login_button_pressed.dart';
-import 'package:TableTies/blocs/login/login_event.dart';
-import 'package:TableTies/blocs/login/login_state.dart';
+import 'package:TableTies/events/login_button_pressed.dart';
+import 'package:TableTies/events/login_event.dart';
+import 'package:TableTies/state/login_state.dart';
 import 'package:TableTies/models/login_response.dart';
 import 'package:TableTies/repo/login_repo.dart';
 import 'package:TableTies/repo/supabase_repo.dart';
@@ -25,18 +25,21 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     LoginButtonPressed event,
     Emitter<LoginState> emit,
   ) async {
-    emit(LoginLoading());
-    var data = await repository.login(event.email, event.password);
-    print("user id is: ${data['user_id']}");
+    try {
+      emit(LoginLoading());
+      var data = await repository.login(event.email, event.password);
 
-    //saveUserSession(data.)
-    var serializedData = LoginResponse.fromJson(data);
+      var serializedData = LoginResponse.fromJson(data);
 
-    saveUserSession(serializedData.userId);
+      // saving user id from the stytch
+      // we could also make a request to supabase here but i think we should do it in the home bloc
+      saveUserSession(serializedData.userId);
+      emit(LoginSuccess(serializedData));
 
-    emit(LoginSuccess(serializedData.toString()));
-    try {} catch (e) {
+      print("User logged in successfully: ${data['user_id']}");
+    } catch (e) {
       emit(LoginFailure(error: e.toString()));
+      print("Error logging in: $e");
     }
   }
 }

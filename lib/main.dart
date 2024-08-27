@@ -1,4 +1,5 @@
 import 'package:TableTies/app.dart';
+import 'package:TableTies/blocs/home/home_bloc.dart';
 import 'package:TableTies/blocs/login/login_bloc.dart';
 import 'package:TableTies/blocs/signup/sign_up_bloc.dart';
 import 'package:TableTies/repo/supabase_repo.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:TableTies/blocs/profile/profile_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,6 +54,12 @@ Future<void> main() async {
                 repository: singupRepository,
                 supabaseRepository: supabaseRepository,
               )),
+      BlocProvider(
+          create: (context) =>
+              HomeBloc(supabaseRepository: supabaseRepository)),
+      BlocProvider(
+          create: (context) =>
+              ProfileBloc(supabaseRepository: supabaseRepository))
     ],
     child: TableTiesApp(),
   ));
