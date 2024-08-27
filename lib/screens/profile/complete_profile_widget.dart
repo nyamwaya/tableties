@@ -23,9 +23,9 @@ class CompleteProfileWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Upcoming',
+            'Upcoming Dinners',
             style: TextStyle(
-              fontSize: 28,
+              fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -35,12 +35,11 @@ class CompleteProfileWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'To provide you with the best service, we need you to complete your profile. '
-                    'Please provide the following information:\n${_formatMissingFields(missingInterests)}',
+                    "Almost there! Complete your profile by adding a ${_formatMissingFields(missingInterests)} to unlock personalized dinners.",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 16,
-                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -58,7 +57,7 @@ class CompleteProfileWidget extends StatelessWidget {
                       padding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       child: Text(
-                        'Complete Profile Setup',
+                        'Unlock Personalized Dinners',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.white,
