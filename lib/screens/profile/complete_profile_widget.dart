@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 
 class CompleteProfileWidget extends StatelessWidget {
-  final List<String>? missingIntrests;
+  final List<String>? missingInterests;
 
-  const CompleteProfileWidget({Key? key, required this.missingIntrests})
+  const CompleteProfileWidget({Key? key, required this.missingInterests})
       : super(key: key);
+
+  String _formatMissingFields(List<String>? fields) {
+    if (fields == null) return '';
+    return fields.map((field) {
+      if (field == 'photo') return 'display profile picture';
+      if (field == 'user_interests') return 'interests';
+      return field;
+    }).join(", ");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,36 +29,44 @@ class CompleteProfileWidget extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 24),
-          const Text(
-            'To see relevant events, add your interests!',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
-                // TODO: Implement add interests functionality
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepOrange,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                child: Text(
-                  'Add Interests',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'To provide you with the best service, we need you to complete your profile. '
+                    'Please provide the following information:\n${_formatMissingFields(missingInterests)}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () {
+                      // TODO: Implement finish profile setup functionality
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepOrange,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      child: Text(
+                        'Complete Profile Setup',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

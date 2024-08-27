@@ -53,7 +53,7 @@ Widget _buildContent(BuildContext context, HomeState state, HomeBloc homeBloc) {
     return const Center(child: Text('List Page'));
   } else if (state is HomeProfileIncomplete) {
     // Directly return the complete profile widget (assuming you have a CompleteProfilePage widget)
-    return CompleteProfileWidget(missingIntrests: state.resource.data);
+    return CompleteProfileWidget(missingInterests: state.resource.data);
   } else if (state is HomeFailure) {
     return Scaffold(
       body: Center(
