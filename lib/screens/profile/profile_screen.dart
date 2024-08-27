@@ -191,6 +191,15 @@ Widget buildBioSection(UserProfile user) {
 }
 
 Widget buildInterestsSection(List<Interest> interests) {
+  // Define the colors extracted from the image
+  final List<Color> chipColors = [
+    Color(0xFFFFFFFF), // White for Travel
+    Color(0xFFFFF4D6), // Light yellow for Big Foodie
+    Color(0xFFD6F5FF), // Light blue for Photography
+    Color(0xFFFFE6FF), // Light pink for Bollywood Movie
+    Color(0xFFE6E6FF), // Light purple for Sharukh Khan
+  ];
+
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -205,21 +214,26 @@ Widget buildInterestsSection(List<Interest> interests) {
       Wrap(
         spacing: 8.0,
         runSpacing: 8.0,
-        children: interests.map((interest) {
+        children: interests.asMap().entries.map((entry) {
+          int index = entry.key;
+          Interest interest = entry.value;
           return Chip(
             label: Text(
               interest.name,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-              ),
-            ),
-            backgroundColor: Colors.white,
-            shape: StadiumBorder(
-              side: BorderSide(
                 color: Colors.black,
               ),
             ),
+            backgroundColor: chipColors[index % chipColors.length],
+            shape: StadiumBorder(
+              side: BorderSide(
+                color: Colors.black,
+                width: 1.5, // Slightly thicker border
+              ),
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           );
         }).toList(),
       ),
