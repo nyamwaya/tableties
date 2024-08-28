@@ -26,12 +26,14 @@ class ProfileInterestsSection extends StatelessWidget {
   }
 
   Widget _buildEditableInterests(BuildContext context) {
+    // This list will store the user's current selections
+    final List<String> currentFormSelections = <String>[];
+
     final allInterestsNames =
         allInterests.map((interest) => interest.name).toList();
-    final userInterestsNames =
-        userInterests.map((interest) => interest.name).toList();
 
-    final intresrtsThatAreSelected = List<String>.empty();
+    // This list will store the user's current selections
+    final List<String> persistentUserInterests = [];
 
     final formKey = GlobalKey<FormState>();
 
@@ -41,10 +43,10 @@ class ProfileInterestsSection extends StatelessWidget {
         children: [
           FormField<List<String>>(
             autovalidateMode: AutovalidateMode.always,
-            initialValue: intresrtsThatAreSelected,
-            onSaved: (value) => onInterestsUpdated(value ?? []),
+            initialValue: persistentUserInterests,
+            onSaved: (value) => onInterestsUpdated(persistentUserInterests),
             validator: (value) {
-              if (value?.isEmpty ?? value == null) {
+              if (value?.isEmpty ?? true) {
                 return 'Please select at least 5 interests';
               }
               if (value!.length != 5) {
@@ -59,7 +61,11 @@ class ProfileInterestsSection extends StatelessWidget {
                     multiple: true,
                     clearable: true,
                     value: formState.value ?? [],
-                    onChanged: (val) => formState.didChange(val),
+                    onChanged: (val) {
+                      formState.didChange(val);
+                      persistentUserInterests.clear();
+                      persistentUserInterests.addAll(val);
+                    },
                     itemCount: allInterestsNames.length,
                     itemBuilder: (selection, i) {
                       return ChoiceChip(
@@ -90,34 +96,6 @@ class ProfileInterestsSection extends StatelessWidget {
                 ],
               );
             },
-          ),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 15),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const Text('Submitted Value:'),
-                      const SizedBox(height: 5),
-                      Text(userInterestsNames.toString())
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 15),
-                ElevatedButton(
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      formKey.currentState!.save();
-                    }
-                  },
-                  child: const Text('Submit'),
-                ),
-              ],
-            ),
           ),
         ],
       ),
