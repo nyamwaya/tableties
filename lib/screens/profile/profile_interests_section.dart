@@ -1,154 +1,138 @@
-// profile_interests_section.dart
-import 'package:TableTies/data_models/interests_model.dart';
-import 'package:TableTies/data_models/user_profile_model.dart';
+import 'package:TableTies/screens/profile/profile_content.dart';
 import 'package:flutter/material.dart';
+import 'package:choice/choice.dart';
+import 'package:TableTies/data_models/interests_model.dart';
 
 class ProfileInterestsSection extends StatelessWidget {
   final List<Interest> userInterests;
+  final List<AllInterests> allInterests;
   final bool isEditing;
-  final List<String> selectedInterests;
-  final bool showLimitError;
-  final Function(List<String>, bool) updateInterests;
+  final Function(List<String>) onInterestsUpdated;
 
   ProfileInterestsSection({
     required this.userInterests,
+    required this.allInterests,
     required this.isEditing,
-    required this.selectedInterests,
-    required this.showLimitError,
-    required this.updateInterests,
+    required this.onInterestsUpdated,
   });
 
   @override
   Widget build(BuildContext context) {
-    final List<Color> chipColors = [
-      Color(0xFFFFFFFF), // White for Travel
-      Color(0xFFFFF4D6), // Light yellow for Big Foodie
-      Color(0xFFD6F5FF), // Light blue for Photography
-      Color(0xFFFFE6FF), // Light pink for Bollywood Movie
-      Color(0xFFE6E6FF), // Light purple for Sharukh Khan
-    ];
-    // Sample interest categories and interests (replace with your actual data)
-    final Map<String, List<String>> interestCategories = {
-      'Outdoor': ['Hiking', 'Running', 'Camping', 'Biking', 'Swimming'],
-      'Creative': ['Painting', 'Photography', 'Writing', 'Music', 'DIY'],
-      'Tech': ['Coding', 'Gaming', 'AI', 'VR', 'Gadgets'],
-    };
+    if (isEditing) {
+      return _buildEditableInterests(context);
+    } else {
+      return _buildDisplayInterests(context);
+    }
+  }
 
-    // State to track selected interests and show error message
-    List<String> selectedInterests = userInterests.map((e) => e.name).toList();
-    bool showLimitError = false;
+  Widget _buildEditableInterests(BuildContext context) {
+    final allInterestsNames =
+        allInterests.map((interest) => interest.name).toList();
+    final userInterestsNames =
+        userInterests.map((interest) => interest.name).toList();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Interests',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 8),
+    final intresrtsThatAreSelected = List<String>.empty();
 
-        // Conditionally render the list of interests or the existing chips
-        if (isEditing)
-          Column(
-            children: [
-              ...interestCategories.entries.map((entry) {
-                String category = entry.key;
-                List<String> interests = entry.value;
+    final formKey = GlobalKey<FormState>();
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      category,
+    return Form(
+      key: formKey,
+      child: Column(
+        children: [
+          FormField<List<String>>(
+            autovalidateMode: AutovalidateMode.always,
+            initialValue: intresrtsThatAreSelected,
+            onSaved: (value) => onInterestsUpdated(value ?? []),
+            validator: (value) {
+              if (value?.isEmpty ?? value == null) {
+                return 'Please select at least 5 interests';
+              }
+              if (value!.length != 5) {
+                return "Exactly 5 interests must be selected";
+              }
+              return null;
+            },
+            builder: (formState) {
+              return Column(
+                children: [
+                  InlineChoice<String>(
+                    multiple: true,
+                    clearable: true,
+                    value: formState.value ?? [],
+                    onChanged: (val) => formState.didChange(val),
+                    itemCount: allInterestsNames.length,
+                    itemBuilder: (selection, i) {
+                      return ChoiceChip(
+                        selected: selection.selected(allInterestsNames[i]),
+                        onSelected: selection.onSelected(allInterestsNames[i]),
+                        label: Text(allInterestsNames[i]),
+                      );
+                    },
+                    listBuilder: ChoiceList.createWrapped(
+                      spacing: 10,
+                      runSpacing: 10,
+                      padding: const EdgeInsets.fromLTRB(20, 25, 20, 10),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      formState.errorText ??
+                          '${formState.value!.length}/5 selected',
                       style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        color: formState.hasError
+                            ? Colors.redAccent
+                            : Colors.green,
                       ),
                     ),
-                    SizedBox(height: 4),
-                    Wrap(
-                      spacing: 8.0,
-                      runSpacing: 4.0,
-                      children: interests.map((interest) {
-                        bool isSelected = selectedInterests.contains(interest);
-                        return ChoiceChip(
-                          label: Text(interest),
-                          selected: isSelected,
-                          onSelected: (newValue) {
-                            if (newValue) {
-                              if (selectedInterests.length < 5) {
-                                List<String> updatedInterests =
-                                    List.from(selectedInterests)..add(interest);
-
-                                updateInterests(updatedInterests, false);
-                                showLimitError =
-                                    false; // Reset error if selection is valid
-                              } else {
-                                updateInterests(selectedInterests, true);
-                              }
-                            } else {
-                              List<String> updatedInterests =
-                                  List.from(selectedInterests)
-                                    ..remove(interest);
-                              updateInterests(updatedInterests, false);
-                            }
-                          },
-                          selectedColor: Colors.orange.withOpacity(0.2),
-                          labelStyle: TextStyle(
-                            color: isSelected ? Colors.orange : Colors.black,
-                          ),
-                          shape: StadiumBorder(
-                            side: BorderSide(
-                              color: isSelected ? Colors.orange : Colors.black,
-                              width: 1.5,
-                            ),
-                          ),
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        );
-                      }).toList(),
-                    )
-                  ],
-                );
-              }).toList(),
-              if (showLimitError)
-                Text(
-                  'You can only select up to 5 interests.',
-                  style: TextStyle(color: Colors.red),
-                ),
-            ],
-          )
-        else
-          Wrap(
-            spacing: 8.0,
-            runSpacing: 8.0,
-            children: userInterests.asMap().entries.map((entry) {
-              int index = entry.key;
-              Interest interest = entry.value;
-              return Chip(
-                label: Text(
-                  interest.name,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                backgroundColor: chipColors[index % chipColors.length],
-                shape: StadiumBorder(
-                  side: BorderSide(
-                    color: Colors.black,
-                    width: 1.5, // Slightly thicker border
-                  ),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  )
+                ],
               );
-            }).toList(),
+            },
           ),
-      ],
+          const Divider(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 15),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const Text('Submitted Value:'),
+                      const SizedBox(height: 5),
+                      Text(userInterestsNames.toString())
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 15),
+                ElevatedButton(
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      formKey.currentState!.save();
+                    }
+                  },
+                  child: const Text('Submit'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDisplayInterests(BuildContext context) {
+    return Wrap(
+      spacing: 8.0,
+      runSpacing: 4.0,
+      children: userInterests.map((interest) {
+        return Chip(
+          label: Text(interest.name),
+        );
+      }).toList(),
     );
   }
 }

@@ -9,15 +9,34 @@ class ProfileContent extends StatelessWidget {
   final UserProfile userProfile;
   final bool isEditing;
   final VoidCallback onEditToggle;
+  final Function(List<String>) onInterestsUpdated;
+  final List<String> selectedInterests;
+  final bool showLimitError;
 
   ProfileContent({
     required this.userProfile,
     required this.isEditing,
     required this.onEditToggle,
+    required this.onInterestsUpdated,
+    required this.selectedInterests,
+    required this.showLimitError,
   });
 
   @override
   Widget build(BuildContext context) {
+    List<AllInterests> allInterests = [
+      AllInterests(name: 'Hiking', category: 'Sports'),
+      AllInterests(name: 'Basketball', category: 'Sports'),
+      AllInterests(name: 'Painting', category: 'Arts & Culture'),
+      AllInterests(name: 'Playing Guitar', category: 'Arts & Culture'),
+      AllInterests(name: 'Cooking Italian Food', category: 'Food & Drink'),
+      AllInterests(name: 'Brewing Coffee', category: 'Food & Drink'),
+      AllInterests(name: 'Backpacking', category: 'Travel & Adventure'),
+      AllInterests(name: 'Scuba Diving', category: 'Travel & Adventure'),
+      AllInterests(
+          name: 'Playing Video Games', category: 'Gaming & Technology'),
+      AllInterests(name: 'Learning to Code', category: 'Gaming & Technology'),
+    ];
     return Column(
       children: [
         ProfileHeader(
@@ -32,19 +51,19 @@ class ProfileContent extends StatelessWidget {
         ),
         SizedBox(height: 24),
         ProfileInterestsSection(
-          isEditing: isEditing,
           userInterests: userProfile.interests,
-          selectedInterests: [
-            'Travel',
-            'Big Foodie',
-            'Photography',
-            'Bollywood Movie',
-            'Sharukh Khan'
-          ],
-          showLimitError: false,
-          updateInterests: (interests, showError) {},
+          isEditing: isEditing,
+          onInterestsUpdated: onInterestsUpdated,
+          allInterests: allInterests,
         ),
       ],
     );
   }
+}
+
+class AllInterests {
+  String name;
+  String category;
+
+  AllInterests({required this.name, required this.category});
 }
