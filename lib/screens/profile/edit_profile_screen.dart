@@ -3,6 +3,7 @@ import 'package:TableTies/data_models/user_profile_model.dart';
 import 'package:TableTies/events/edit_profile_events.dart';
 import 'package:TableTies/state/edit_profile_states.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/profile/profile_bloc.dart';
 import '../../data_models/user_supabase.dart';
@@ -52,44 +53,57 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: BlocBuilder<EditProfileBloc, EditProfileState>(
-        builder: (context, state) {
-          if (state is EditProfileLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is EditProfileSuccess) {
-            UserProfile user = widget.receivedUser;
-
-            _firstNameController.text = user.firstName ?? '';
-            _lastNameController.text = user.lastName ?? '';
-            _occupationController.text = user.occupation ?? '';
-            _bioController.text = user.bio ?? '';
-
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildProfilePicture(user),
-                  const SizedBox(height: 24),
-                  buildEditableField('First Name', _firstNameController),
-                  buildEditableField('Last Name', _lastNameController),
-                  buildEditableField('Occupation', _occupationController),
-                  buildEditableBio(),
-                  const SizedBox(height: 24),
-                  //    buildInterestsSection(user.interests ?? []),
-                  const SizedBox(height: 24),
-                  buildSaveButton(context),
-                ],
-              ),
+      body: BlocConsumer<EditProfileBloc, EditProfileState>(
+        listener: (context, state) {
+          if (state is EditProfileValidationError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.errors.values.join('\n'))),
+            );
+          } else if (state is EditProfileError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Error: ${state.message}')),
+            );
+          } else if (state is EditProfileSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Profile updated successfully')),
             );
           }
-          if (state is EditProfileValidationError) {
-            return Center(child: Text(state.errors.values.join('\n')));
-          }
-
-          return const Center(child: Text('Unexpected state'));
         },
+        builder: (context, state) {
+          return Stack(
+            children: [
+              _buildSuccessState(widget.receivedUser),
+              if (state is EditProfileLoading)
+                const Center(child: CircularProgressIndicator()),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildSuccessState(UserProfile user) {
+    _firstNameController.text = user.firstName ?? '';
+    _lastNameController.text = user.lastName ?? '';
+    _occupationController.text = user.occupation ?? '';
+    _bioController.text = user.bio ?? '';
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          buildProfilePicture(user),
+          const SizedBox(height: 24),
+          buildEditableField('First Name', _firstNameController),
+          buildEditableField('Last Name', _lastNameController),
+          buildEditableField('Occupation', _occupationController),
+          buildEditableBio(),
+          const SizedBox(height: 24),
+          //    buildInterestsSection(user.interests ?? []),
+          const SizedBox(height: 24),
+          buildSaveButton(context),
+        ],
       ),
     );
   }
@@ -205,22 +219,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           Map<String, dynamic> updatedFields = {};
 
           // Check each field and add to updatedFields only if changed
-          if (_firstNameController.text != widget.receivedUser.firstName) {
+          if (_firstNameController.text != widget.receivedUser.firstName &&
+              _firstNameController.text.isNotEmpty) {
             updatedFields['firstName'] = _firstNameController.text;
           }
-          if (_lastNameController.text != widget.receivedUser.lastName) {
+          if (_lastNameController.text != widget.receivedUser.lastName &&
+              _lastNameController.text.isNotEmpty) {
             updatedFields['lastName'] = _lastNameController.text;
           }
-          if (_occupationController.text != widget.receivedUser.occupation) {
+          if (_occupationController.text != widget.receivedUser.occupation &&
+              _occupationController.text.isNotEmpty) {
             updatedFields['occupation'] = _occupationController.text;
           }
-          if (_bioController.text != widget.receivedUser.bio) {
+          if (_bioController.text != widget.receivedUser.bio &&
+              _bioController.text.isNotEmpty) {
             updatedFields['bio'] = _bioController.text;
           }
 
           // Dispatch update event to Edt Profile bloci
-          BlocProvider.of<EditProfileBloc>(context)
-              .add(UpdateProfile(profileChanges: updatedFields));
+          if (updatedFields.isNotEmpty) {
+            BlocProvider.of<EditProfileBloc>(context)
+                .add(UpdateProfile(profileChanges: updatedFields));
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                    'No changes detected. Please make changes before saving.'),
+                duration: Duration(seconds: 3),
+              ),
+            );
+          }
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.black,
