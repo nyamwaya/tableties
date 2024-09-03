@@ -54,7 +54,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
       body: BlocBuilder<EditProfileBloc, EditProfileState>(
         builder: (context, state) {
-          if (state is ProfileLoaded) {
+          if (state is EditProfileLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is EditProfileSuccess) {
             UserProfile user = widget.receivedUser;
 
             _firstNameController.text = user.firstName ?? '';
@@ -80,9 +83,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ],
               ),
             );
-          } else {
-            return const Center(child: CircularProgressIndicator());
           }
+          if (state is EditProfileValidationError) {
+            return Center(child: Text(state.errors.values.join('\n')));
+          }
+
+          return const Center(child: Text('Unexpected state'));
         },
       ),
     );
@@ -107,7 +113,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               backgroundColor: Colors.white,
               radius: 18,
               child: IconButton(
-                icon: const Icon(Icons.camera_alt, size: 18, color: Colors.black),
+                icon:
+                    const Icon(Icons.camera_alt, size: 18, color: Colors.black),
                 onPressed: () {
                   // TODO: Implement photo change functionality
                 },
