@@ -16,7 +16,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
   SignUpBloc(
       {required this.repository,
-      required SupabaseRepository this.supabaseRepository})
+      required this.supabaseRepository})
       : super(SignUpInitial()) {
     on<SignUpSubmitted>(_onSignUpSubmitted);
   }
@@ -59,7 +59,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         saveUserObject(jsonEncode(user.toJson()));
         emit(SignUpSuccess(jsonEncode(user.toJson())));
       } else {
-        emit(SignUpFailure('Failed to insert user in Supabase'));
+        emit(const SignUpFailure('Failed to insert user in Supabase'));
       }
     } catch (e) {
       print('_onSignUpSubmitted error: $e');

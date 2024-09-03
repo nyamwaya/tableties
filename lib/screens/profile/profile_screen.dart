@@ -14,6 +14,8 @@ import 'package:TableTies/state/profile_states.dart';
 import 'package:TableTies/events/profile_events.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -24,19 +26,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final profileBloc = BlocProvider.of<ProfileBloc>(context);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      profileBloc.add(DisplayUserFromMemory());
+      profileBloc.add(const DisplayUserFromMemory());
     });
 
     return Scaffold(
         body: SafeArea(
             child: SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: BlocBuilder<ProfileBloc, ProfileState>(
           builder: (context, state) {
             // Your UI based on the ProfileState
             if (state is ProfileInitial) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (state is ProfileLoading) {
               return Text('Profile Loading: ${state.props.first}');
             } else if (state is ProfileLoaded) {
@@ -46,9 +48,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   buildHeader(user, context),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   buildBioSection(user),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   buildInterestsSection(user)
                 ],
               );
@@ -73,7 +75,7 @@ Widget buildHeader(UserProfile user, BuildContext context) {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {
               // Handle back button press
               Navigator.pushReplacement(
@@ -83,14 +85,14 @@ Widget buildHeader(UserProfile user, BuildContext context) {
             },
           ),
           IconButton(
-            icon: Icon(Icons.settings),
+            icon: const Icon(Icons.settings),
             onPressed: () {
               // Handle settings button press
             },
           ),
         ],
       ),
-      SizedBox(height: 16),
+      const SizedBox(height: 16),
       CircleAvatar(
         radius: 50,
         backgroundImage: user.profilePhoto != null &&
@@ -99,24 +101,23 @@ Widget buildHeader(UserProfile user, BuildContext context) {
             : const AssetImage(
                 'assets/images/profile_image.jpeg'), // Replace with actual image path
       ),
-      SizedBox(height: 16),
+      const SizedBox(height: 16),
       Text(
         '${user.firstName} ${user.lastName}',
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
         ),
       ),
       Text(
-        '${user.occupation ?? 'Enter your occupation'}',
-        style: TextStyle(
+        user.occupation ?? 'Enter your occupation',
+        style: const TextStyle(
           fontSize: 16,
           color: Colors.grey,
         ),
       ),
-      SizedBox(height: 16),
+      const SizedBox(height: 16),
       ElevatedButton(
-        child: Text('Edit Profile'),
         onPressed: () {
           // Handle edit profile button press
           Navigator.push(
@@ -132,6 +133,7 @@ Widget buildHeader(UserProfile user, BuildContext context) {
             borderRadius: BorderRadius.circular(20),
           ),
         ),
+        child: Text('Edit Profile'),
       ),
     ],
   );
@@ -141,16 +143,16 @@ Widget buildBioSection(UserProfile user) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(
+      const Text(
         'Bio',
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.black),
           borderRadius: BorderRadius.circular(12),
@@ -172,16 +174,16 @@ Widget buildInterestsSection(UserProfile user) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(
+      const Text(
         'Interests',
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       user.interests.isEmpty
-          ? Text(
+          ? const Text(
               'No interests yet. Edit your profile to add interests.',
               style: TextStyle(
                 fontSize: 16,
@@ -195,12 +197,12 @@ Widget buildInterestsSection(UserProfile user) {
                 return Chip(
                   label: Text(
                     interest.name,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                     ),
                   ),
                   backgroundColor: Colors.white,
-                  shape: StadiumBorder(
+                  shape: const StadiumBorder(
                     side: BorderSide(
                       color: Colors.black,
                     ),

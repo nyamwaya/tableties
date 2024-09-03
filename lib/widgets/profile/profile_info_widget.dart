@@ -6,8 +6,8 @@ class ProfileField extends StatelessWidget {
   final bool isEditMode;
   final ValueChanged<String> onChanged;
 
-  ProfileField(
-      {required this.label,
+  const ProfileField(
+      {super.key, required this.label,
       required this.value,
       required this.isEditMode,
       required this.onChanged});
@@ -19,17 +19,17 @@ class ProfileField extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
           isEditMode
               ? TextField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     hintText: 'Enter $label',
                   ),
                   onChanged: onChanged,
                   controller: TextEditingController(text: value),
                 )
-              : Text(value, style: TextStyle(fontSize: 16)),
+              : Text(value, style: const TextStyle(fontSize: 16)),
         ],
       ),
     );

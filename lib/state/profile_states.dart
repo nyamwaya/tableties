@@ -22,6 +22,7 @@ class ProfileInitial extends ProfileState {
 class ProfileLoading extends ProfileState {}
 
 class ProfileLoaded extends ProfileState {
+  @override
   final UserProfile userProfile;
   const ProfileLoaded(this.userProfile)
       : super(userProfile: userProfile); // Pass as named argument

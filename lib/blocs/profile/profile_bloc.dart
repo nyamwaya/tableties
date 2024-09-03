@@ -11,7 +11,7 @@ import 'package:TableTies/data_models/user_profile_model.dart';
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileREpository profileREpository;
 
-  ProfileBloc({required this.profileREpository}) : super(ProfileInitial()) {
+  ProfileBloc({required this.profileREpository}) : super(const ProfileInitial()) {
     on<DisplayUserFromMemory>(_onGetUserFromMemory);
   }
 

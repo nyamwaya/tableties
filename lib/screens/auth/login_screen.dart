@@ -9,6 +9,8 @@ class LoginScreen extends StatelessWidget {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
@@ -23,7 +25,7 @@ class LoginScreen extends StatelessWidget {
               listener: (context, state) {
                 if (state is LoginSuccess) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Login successful')),
+                    const SnackBar(content: Text('Login successful')),
                   );
 
                   //navigate to home. what we only have here is a user id.
@@ -44,14 +46,14 @@ class LoginScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Welcome back!',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         'Login to reconnect with like-minded individuals and enjoy authentic connections over dinner, in your community.',
                         style: TextStyle(
@@ -59,10 +61,10 @@ class LoginScreen extends StatelessWidget {
                           fontSize: 14,
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextFormField(
                         controller: _emailController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Email address',
                           prefixIcon: Icon(Icons.person_outline),
                         ),
@@ -78,10 +80,10 @@ class LoginScreen extends StatelessWidget {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       TextFormField(
                         controller: _passwordController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Password',
                           prefixIcon: Icon(Icons.lock_outline),
                         ),
@@ -103,11 +105,11 @@ class LoginScreen extends StatelessWidget {
                           return null;
                         },
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          child: Text(
+                          child: const Text(
                             'Forgot password?',
                             style: TextStyle(color: Colors.deepOrange),
                           ),
@@ -116,14 +118,13 @@ class LoginScreen extends StatelessWidget {
                           },
                         ),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          child: Text('Sign in'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.deepOrange,
-                            padding: EdgeInsets.symmetric(vertical: 16),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
                           ),
                           onPressed: state is LoginLoading
                               ? null
@@ -137,17 +138,18 @@ class LoginScreen extends StatelessWidget {
                                         );
                                   }
                                 },
+                          child: Text('Sign in'),
                         ),
                       ),
                       if (state is LoginLoading)
-                        Center(child: CircularProgressIndicator()),
-                      SizedBox(height: 16),
+                        const Center(child: CircularProgressIndicator()),
+                      const SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("New to Mesa?"),
+                          const Text("New to Mesa?"),
                           TextButton(
-                            child: Text(
+                            child: const Text(
                               'Sign up now!',
                               style: TextStyle(color: Colors.deepOrange),
                             ),

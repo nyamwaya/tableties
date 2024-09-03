@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MatchedPage extends StatelessWidget {
-  const MatchedPage({Key? key}) : super(key: key);
+  const MatchedPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class MatchedPage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
-                      children: [
+                      children: const [
                         TextSpan(text: "You've\n"),
                         TextSpan(
                             text: "Matched ",
@@ -52,17 +52,17 @@ class MatchedPage extends StatelessWidget {
                     onPressed: () {
                       // Handle FAQs button press
                     },
-                    child: Text('FAQs',
-                        style: GoogleFonts.montserrat(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
                     ),
+                    child: Text('FAQs',
+                        style: GoogleFonts.montserrat(color: Colors.white)),
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Card(
                 elevation: 4,
                 shape: RoundedRectangleBorder(
@@ -78,11 +78,11 @@ class MatchedPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text('Attendees:',
                   style: GoogleFonts.montserrat(
                       fontSize: 18, fontWeight: FontWeight.bold)),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               _buildAttendeeCard('Bill Rizer', 'Planet Designer', Colors.teal),
               _buildAttendeeCard(
                   'Genbei Yagy', 'Planet Designer', Colors.deepOrange),
@@ -101,10 +101,10 @@ class MatchedPage extends StatelessWidget {
       child: Row(
         children: [
           Icon(icon, color: Colors.amber),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Text(text, style: GoogleFonts.montserrat()),
-          Spacer(),
-          Icon(Icons.chevron_right),
+          const Spacer(),
+          const Icon(Icons.chevron_right),
         ],
       ),
     );

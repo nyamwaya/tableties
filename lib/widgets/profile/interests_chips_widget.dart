@@ -5,8 +5,8 @@ class InterestsChips extends StatelessWidget {
   final bool isEditMode;
   final ValueChanged<List<String>> onInterestChanged;
 
-  InterestsChips(
-      {required this.interests,
+  const InterestsChips(
+      {super.key, required this.interests,
       required this.isEditMode,
       required this.onInterestChanged});
 
@@ -17,7 +17,7 @@ class InterestsChips extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Interests', style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text('Interests', style: TextStyle(fontWeight: FontWeight.bold)),
           Wrap(
             spacing: 8.0,
             children: interests.map((interest) {

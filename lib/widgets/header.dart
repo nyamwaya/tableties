@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppHeader extends StatelessWidget {
-  const AppHeader({Key? key}) : super(key: key);
+  const AppHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -9,7 +9,7 @@ class AppHeader extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       // Adjust padding as needed
       color: Colors.white, // Or any desired background color
-      child: Row(
+      child: const Row(
         mainAxisAlignment:
             MainAxisAlignment.spaceBetween, // Align items to left and right
         children: [

@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:TableTies/screens/profile/profile_screen.dart';
 
 class TableTiesApp extends StatelessWidget {
-  const TableTiesApp({Key? key}) : super(key: key);
+  const TableTiesApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class TableTiesApp extends StatelessWidget {
       future: _getInitialRoute(),
       builder: (context, AsyncSnapshot<String> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return MaterialApp(
+          return const MaterialApp(
             home: Scaffold(
               body: Center(
                 child: CircularProgressIndicator(),
@@ -35,11 +35,11 @@ class TableTiesApp extends StatelessWidget {
           return MaterialApp(
             home: _getHomeScreen(snapshot.data),
             routes: {
-              '/onboarding': (context) => IntroScreen(),
+              '/onboarding': (context) => const IntroScreen(),
               '/login': (context) => LoginScreen(),
               '/signup': (context) => SignUpPage(),
               '/home': (context) => HomePage(),
-              '/matched': (context) => MatchedPage(),
+              '/matched': (context) => const MatchedPage(),
               '/profile': (context) => ProfileScreen(),
               // '/settings': (context) =>,
 
@@ -86,7 +86,7 @@ class TableTiesApp extends StatelessWidget {
   Widget _getHomeScreen(String? initialRoute) {
     switch (initialRoute) {
       case '/onboarding':
-        return IntroScreen();
+        return const IntroScreen();
       case '/home':
         return HomePage(); // Replace with your home screen widget
       case '/login':

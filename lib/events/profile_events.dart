@@ -24,5 +24,5 @@ class BuildUserInterests extends ProfileEvent {
 }
 
 class LoadUserProfile extends ProfileEvent {
-  LoadUserProfile();
+  const LoadUserProfile();
 }

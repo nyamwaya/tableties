@@ -1,6 +1,5 @@
 // home_event.dart
 
-import 'package:TableTies/data_models/user_supabase.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class HomeEvent extends Equatable {

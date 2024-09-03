@@ -68,6 +68,6 @@ Future<void> main() async {
           create: (context) =>
               EditProfileBloc(profileRepository: profileRepository))
     ],
-    child: TableTiesApp(),
+    child: const TableTiesApp(),
   ));
 }

@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:TableTies/data_models/user_profile_model.dart';
 
 abstract class EditProfileEvents extends Equatable {
   const EditProfileEvents();

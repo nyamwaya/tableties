@@ -51,7 +51,7 @@ class SupabaseRepository {
       print('retrived Supabase user successfuly: $userResponse');
 
       // serialize the json into an object.
-      final userData = userResponse[0] as Map<String, dynamic>;
+      final userData = userResponse[0];
 
       final userModel = UserSupabase.fromJson(userData);
       // send the data model not the direct json here
@@ -76,11 +76,6 @@ class SupabaseRepository {
           last_name, 
           user_interests (interests)
         ''').eq('id', userId).single();
-
-      if (response == null) {
-        return Resource.failure(
-            'User not found'); // This is still a failure case
-      }
 
       final userInterests = (response['user_interests'] as List?)
           ?.map((item) => item['interests'])
@@ -167,8 +162,6 @@ class SupabaseRepository {
           .eq('id', interestId)
           .single();
 
-      if (interestResponse == null) return null;
-
       // Fetch the category name for this interest
       final categoryName =
           await _getCategoryName(interestResponse['category_id']);
@@ -217,10 +210,6 @@ class SupabaseRepository {
           .select()
           .single();
 
-      if (response == null) {
-        return Resource.failure('Failed to update user');
-      }
-
       return Resource.success(response);
     } catch (e) {
       print('Error updating user: $e');
@@ -247,10 +236,6 @@ class SupabaseRepository {
 
       final response =
           await _client.from('user_interests').insert(insertData).select();
-
-      if (response == null) {
-        return Resource.failure('Failed to update user interests');
-      }
 
       return Resource.success(response);
     } catch (e) {

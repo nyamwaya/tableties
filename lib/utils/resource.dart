@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Resource class
 class Resource<T> {

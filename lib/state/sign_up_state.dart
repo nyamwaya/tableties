@@ -14,7 +14,7 @@ class SignUpLoading extends SignUpState {}
 class SignUpSuccess extends SignUpState {
   final String response; // Adjust the type as per your response
 
-  SignUpSuccess(this.response);
+  const SignUpSuccess(this.response);
 
   @override
   List<Object> get props => [response];

@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final SignUpBloc signUpBloc = BlocProvider.of<SignUpBloc>(context);
@@ -19,6 +21,8 @@ class SignUpPage extends StatelessWidget {
 }
 
 class SignUpForm extends StatefulWidget {
+  const SignUpForm({super.key});
+
   @override
   _SignUpFormState createState() => _SignUpFormState();
 }
@@ -43,7 +47,7 @@ class _SignUpFormState extends State<SignUpForm> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
         backgroundColor: Colors.transparent,
@@ -56,10 +60,10 @@ class _SignUpFormState extends State<SignUpForm> {
             final user = UserSupabase.fromJson(jsonDecode(state.response));
 
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Sign-up successful!")),
+              const SnackBar(content: Text("Sign-up successful!")),
             );
 
-            Future.delayed(Duration(seconds: 1), () {
+            Future.delayed(const Duration(seconds: 1), () {
               Navigator.pushNamed(
                 context,
                 '/home',
@@ -80,14 +84,14 @@ class _SignUpFormState extends State<SignUpForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Sign up',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     'Meet new people in your city who share your passions. Mesas group dinners bring like-minded individuals together, leading to meaningful friendships and unforgettable experiences.',
                     style: TextStyle(
@@ -95,10 +99,10 @@ class _SignUpFormState extends State<SignUpForm> {
                       fontSize: 14,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextFormField(
                     controller: _fullNameController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Full Name',
                       prefixIcon: Icon(Icons.person_outline),
                     ),
@@ -112,10 +116,10 @@ class _SignUpFormState extends State<SignUpForm> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextFormField(
                     controller: _emailController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Email address',
                       prefixIcon: Icon(Icons.email_outlined),
                     ),
@@ -131,10 +135,10 @@ class _SignUpFormState extends State<SignUpForm> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextFormField(
                     controller: _passwordController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Password',
                       prefixIcon: Icon(Icons.lock_outline),
                     ),
@@ -155,7 +159,7 @@ class _SignUpFormState extends State<SignUpForm> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Row(
                     children: [
                       Checkbox(
@@ -169,7 +173,7 @@ class _SignUpFormState extends State<SignUpForm> {
                       ),
                       Expanded(
                         child: RichText(
-                          text: TextSpan(
+                          text: const TextSpan(
                             style: TextStyle(color: Colors.black),
                             children: [
                               TextSpan(
@@ -189,33 +193,33 @@ class _SignUpFormState extends State<SignUpForm> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
                     child: BlocBuilder<SignUpBloc, SignUpState>(
                       builder: (context, state) {
                         return ElevatedButton(
-                          child: Text(state is SignUpLoading
-                              ? 'Loading...'
-                              : 'Create Account'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.deepOrange,
-                            padding: EdgeInsets.symmetric(vertical: 16),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
                           ),
                           onPressed: state is SignUpLoading || !_agreedToTerms
                               ? null
                               : _submit,
+                          child: Text(state is SignUpLoading
+                              ? 'Loading...'
+                              : 'Create Account'),
                         );
                       },
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Have an account?"),
+                      const Text("Have an account?"),
                       TextButton(
-                        child: Text(
+                        child: const Text(
                           'Login here',
                           style: TextStyle(color: Colors.deepOrange),
                         ),

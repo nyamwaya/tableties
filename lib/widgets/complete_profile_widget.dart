@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class CompleteProfileWidget extends StatelessWidget {
   final List<String>? missingInterests;
 
-  const CompleteProfileWidget({Key? key, required this.missingInterests})
-      : super(key: key);
+  const CompleteProfileWidget({super.key, required this.missingInterests});
 
   String _formatMissingFields(List<String>? fields) {
     if (fields == null) return '';

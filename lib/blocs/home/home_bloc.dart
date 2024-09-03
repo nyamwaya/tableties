@@ -5,7 +5,6 @@ import 'package:TableTies/events/home_event.dart';
 import 'package:TableTies/repo/supabase_repo.dart';
 import 'package:TableTies/utils/resource.dart';
 import 'package:TableTies/state/home_state.dart';
-import 'dart:convert';
 import 'package:TableTies/utils/user_upabase_json_utils.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {

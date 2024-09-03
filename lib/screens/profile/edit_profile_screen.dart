@@ -12,8 +12,7 @@ import '../../events/profile_events.dart';
 class EditProfileScreen extends StatefulWidget {
   final UserProfile receivedUser;
 
-  const EditProfileScreen({Key? key, required this.receivedUser})
-      : super(key: key);
+  const EditProfileScreen({super.key, required this.receivedUser});
 
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
@@ -49,7 +48,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       appBar: AppBar(
         title: const Text('Edit Profile'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -69,20 +68,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   buildProfilePicture(user),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   buildEditableField('First Name', _firstNameController),
                   buildEditableField('Last Name', _lastNameController),
                   buildEditableField('Occupation', _occupationController),
                   buildEditableBio(),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   //    buildInterestsSection(user.interests ?? []),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   buildSaveButton(context),
                 ],
               ),
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
@@ -98,7 +97,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             backgroundImage:
                 user.profilePhoto != null && user.profilePhoto!.isNotEmpty
                     ? NetworkImage(user.profilePhoto!)
-                    : AssetImage('assets/images/profile_image.jpeg')
+                    : const AssetImage('assets/images/profile_image.jpeg')
                         as ImageProvider,
           ),
           Positioned(
@@ -108,7 +107,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               backgroundColor: Colors.white,
               radius: 18,
               child: IconButton(
-                icon: Icon(Icons.camera_alt, size: 18, color: Colors.black),
+                icon: const Icon(Icons.camera_alt, size: 18, color: Colors.black),
                 onPressed: () {
                   // TODO: Implement photo change functionality
                 },
@@ -158,14 +157,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Interests',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Wrap(
           spacing: 8.0,
           runSpacing: 8.0,
@@ -173,13 +172,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             return Chip(
               label: Text(
                 interest,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               backgroundColor: Colors.white,
-              shape: StadiumBorder(
+              shape: const StadiumBorder(
                 side: BorderSide(
                   color: Colors.black,
                 ),
@@ -194,7 +193,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget buildSaveButton(BuildContext context) {
     return Center(
       child: ElevatedButton(
-        child: Text('Save Changes'),
         onPressed: () {
           // Create a map to hold only the changed fields
           Map<String, dynamic> updatedFields = {};
@@ -224,6 +222,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             borderRadius: BorderRadius.circular(20),
           ),
         ),
+        child: Text('Save Changes'),
       ),
     );
   }

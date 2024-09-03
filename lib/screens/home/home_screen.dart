@@ -7,6 +7,8 @@ import 'package:TableTies/state/home_state.dart';
 import 'package:TableTies/widgets/complete_profile_widget.dart';
 
 class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
@@ -34,7 +36,7 @@ class HomePage extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: AppHeader(),
+            title: const AppHeader(),
             automaticallyImplyLeading: false,
           ),
           body: _buildContent(context, state, homeBloc),
@@ -70,6 +72,6 @@ Widget _buildContent(BuildContext context, HomeState state, HomeBloc homeBloc) {
       ),
     );
   } else {
-    return Scaffold(body: Center(child: Text('Unknown state')));
+    return const Scaffold(body: Center(child: Text('Unknown state')));
   }
 }
