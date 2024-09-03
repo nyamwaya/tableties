@@ -49,4 +49,35 @@ class ProfileREpository {
     final List<dynamic> jsonList = json.decode(jsonString);
     return jsonList.map((json) => Interest.fromJson(json)).toList();
   }
+
+  Future<Resource<UserProfile>> updateUser(
+      Map<String, dynamic> updatedFields) async {
+    try {
+      final userId = await getUserId() as String;
+
+      final updateResult = await supabaseRepository.updateUser(
+        userId: userId,
+        updatedFields: updatedFields,
+      );
+
+      if (updateResult.status == ResourceStatus.failure) {
+        return Resource.failure(
+            updateResult.data.toString() ?? 'Failed to update user profile');
+      }
+
+      // Fetch the updated user profile
+      final updatedProfileResult = await getUserProfile();
+
+      if (updatedProfileResult.status == ResourceStatus.success) {
+        return updatedProfileResult;
+      } else {
+        return Resource.failure(
+            'Profile updated, but failed to fetch the updated profile');
+      }
+    } catch (e) {
+      print('Error in ProfileRepository.updateUser: $e');
+      return Resource.failure(
+          'An error occurred while updating the user profile');
+    }
+  }
 }

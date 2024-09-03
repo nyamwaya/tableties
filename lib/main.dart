@@ -1,6 +1,7 @@
 import 'package:TableTies/app.dart';
 import 'package:TableTies/blocs/home/home_bloc.dart';
 import 'package:TableTies/blocs/login/login_bloc.dart';
+import 'package:TableTies/blocs/profile/edit_profile_bloc.dart';
 import 'package:TableTies/blocs/signup/sign_up_bloc.dart';
 import 'package:TableTies/repo/profile_repo.dart';
 import 'package:TableTies/repo/supabase_repo.dart';
@@ -62,7 +63,10 @@ Future<void> main() async {
               HomeBloc(supabaseRepository: supabaseRepository)),
       BlocProvider(
           create: (context) =>
-              ProfileBloc(profileREpository: profileRepository))
+              ProfileBloc(profileREpository: profileRepository)),
+      BlocProvider(
+          create: (context) =>
+              EditProfileBloc(profileRepository: profileRepository))
     ],
     child: TableTiesApp(),
   ));

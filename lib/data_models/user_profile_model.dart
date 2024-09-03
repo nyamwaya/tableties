@@ -64,6 +64,46 @@ class UserProfile {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'occupation': occupation,
+      'bio': bio,
+      'phone': phone,
+      'gender': gender,
+      'birthday': birthday?.toIso8601String(),
+      'createdAt': createdAt.toIso8601String(),
+      'profilePhoto': profilePhoto,
+      'interests': interests.map((interest) => interest.toJson()).toList(),
+      'events': events,
+    };
+  }
+
+  factory UserProfile.fromJson(Map<String, dynamic> json) {
+    return UserProfile(
+      id: json['id'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      email: json['email'],
+      occupation: json['occupation'],
+      bio: json['bio'],
+      phone: json['phone'],
+      gender: json['gender'],
+      birthday:
+          json['birthday'] != null ? DateTime.parse(json['birthday']) : null,
+      createdAt: DateTime.parse(json['createdAt']),
+      profilePhoto: json['profilePhoto'],
+      interests: (json['interests'] as List<dynamic>?)
+              ?.map((interestJson) => Interest.fromJson(interestJson))
+              .toList() ??
+          [],
+      events: List<String>.from(json['events'] ?? []),
+    );
+  }
+
   factory UserProfile.fromUserSupabase(UserSupabase user) {
     return UserProfile(
       id: user.id,

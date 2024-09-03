@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:TableTies/data_models/user_profile_model.dart';
 import 'package:TableTies/data_models/user_supabase.dart';
 import 'package:TableTies/screens/home/home_screen.dart';
-import 'package:TableTies/screens/profile/edit_profile.dart';
+import 'package:TableTies/screens/profile/edit_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../widgets/profile/profile_picture_widget.dart';
@@ -121,7 +121,8 @@ Widget buildHeader(UserProfile user, BuildContext context) {
           // Handle edit profile button press
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => EditProfileScreen()),
+            MaterialPageRoute(
+                builder: (context) => EditProfileScreen(receivedUser: user)),
           );
         },
         style: ElevatedButton.styleFrom(
@@ -196,7 +197,6 @@ Widget buildInterestsSection(UserProfile user) {
                     interest.name,
                     style: TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   backgroundColor: Colors.white,

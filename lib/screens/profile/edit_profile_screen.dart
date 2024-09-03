@@ -1,3 +1,7 @@
+import 'package:TableTies/blocs/profile/edit_profile_bloc.dart';
+import 'package:TableTies/data_models/user_profile_model.dart';
+import 'package:TableTies/events/edit_profile_events.dart';
+import 'package:TableTies/state/edit_profile_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/profile/profile_bloc.dart';
@@ -6,7 +10,10 @@ import '../../state/profile_states.dart';
 import '../../events/profile_events.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({Key? key}) : super(key: key);
+  final UserProfile receivedUser;
+
+  const EditProfileScreen({Key? key, required this.receivedUser})
+      : super(key: key);
 
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
@@ -46,11 +53,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: BlocBuilder<ProfileBloc, ProfileState>(
+      body: BlocBuilder<EditProfileBloc, EditProfileState>(
         builder: (context, state) {
           if (state is ProfileLoaded) {
-            final user = UserSupabase.fromJson(
-                state.props.first as Map<String, dynamic>);
+            UserProfile user = widget.receivedUser;
+
             _firstNameController.text = user.firstName ?? '';
             _lastNameController.text = user.lastName ?? '';
             _occupationController.text = user.occupation ?? '';
@@ -70,7 +77,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   SizedBox(height: 24),
                   //    buildInterestsSection(user.interests ?? []),
                   SizedBox(height: 24),
-                  //  buildSaveButton(context, user),
+                  buildSaveButton(context),
                 ],
               ),
             );
@@ -82,7 +89,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget buildProfilePicture(UserSupabase user) {
+  Widget buildProfilePicture(UserProfile user) {
     return Center(
       child: Stack(
         children: [
@@ -184,31 +191,40 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  // Widget buildSaveButton(BuildContext context, UserSupabase user) {
-  //   return Center(
-  //     child: ElevatedButton(
-  //       child: Text('Save Changes'),
-  //       onPressed: () {
-  //         // Update user object with new values
-  //         user.firstName = _firstNameController.text;
-  //         user.lastName = _lastNameController.text;
-  //         user.occupation = _occupationController.text;
-  //         user.bio = _bioController.text;
+  Widget buildSaveButton(BuildContext context) {
+    return Center(
+      child: ElevatedButton(
+        child: Text('Save Changes'),
+        onPressed: () {
+          // Create a map to hold only the changed fields
+          Map<String, dynamic> updatedFields = {};
 
-  //         // Dispatch update event to ProfileBloc
-  //         BlocProvider.of<ProfileBloc>(context).add(UpdateUserProfile(user));
+          // Check each field and add to updatedFields only if changed
+          if (_firstNameController.text != widget.receivedUser.firstName) {
+            updatedFields['firstName'] = _firstNameController.text;
+          }
+          if (_lastNameController.text != widget.receivedUser.lastName) {
+            updatedFields['lastName'] = _lastNameController.text;
+          }
+          if (_occupationController.text != widget.receivedUser.occupation) {
+            updatedFields['occupation'] = _occupationController.text;
+          }
+          if (_bioController.text != widget.receivedUser.bio) {
+            updatedFields['bio'] = _bioController.text;
+          }
 
-  //         // Navigate back to profile screen
-  //         Navigator.pop(context);
-  //       },
-  //       style: ElevatedButton.styleFrom(
-  //         backgroundColor: Colors.black,
-  //         foregroundColor: Colors.white,
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(20),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+          // Dispatch update event to Edt Profile bloci
+          BlocProvider.of<EditProfileBloc>(context)
+              .add(UpdateProfile(profileChanges: updatedFields));
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+      ),
+    );
+  }
 }

@@ -203,4 +203,102 @@ class SupabaseRepository {
       return 'Unknown Category';
     }
   }
+
+  // Function to update user information
+  Future<Resource<Map<String, dynamic>>> updateUser({
+    required String userId,
+    required Map<String, dynamic> updatedFields,
+  }) async {
+    try {
+      final response = await _client
+          .from('users')
+          .update(updatedFields)
+          .eq('id', userId)
+          .select()
+          .single();
+
+      if (response == null) {
+        return Resource.failure('Failed to update user');
+      }
+
+      return Resource.success(response);
+    } catch (e) {
+      print('Error updating user: $e');
+      return Resource.failure('An error occurred while updating user');
+    }
+  }
+
+  // Function to update user interests
+  Future<Resource<List<Map<String, dynamic>>>> updateUserInterests({
+    required String userId,
+    required List<String> interestIds,
+  }) async {
+    try {
+      // First, delete all existing interests for the user
+      await _client.from('user_interests').delete().eq('user_id', userId);
+
+      // Then, insert the new interests
+      final insertData = interestIds
+          .map((interestId) => {
+                'user_id': userId,
+                'interest_id': interestId,
+              })
+          .toList();
+
+      final response =
+          await _client.from('user_interests').insert(insertData).select();
+
+      if (response == null) {
+        return Resource.failure('Failed to update user interests');
+      }
+
+      return Resource.success(response);
+    } catch (e) {
+      print('Error updating user interests: $e');
+      return Resource.failure(
+          'An error occurred while updating user interests');
+    }
+  }
+
+  // Function to update both user information and interests
+  Future<Resource<Map<String, dynamic>>> updateUserProfile({
+    required String userId,
+    Map<String, dynamic>? userFields,
+    List<String>? interestIds,
+  }) async {
+    try {
+      if (userFields != null && userFields.isNotEmpty) {
+        final userUpdateResult = await updateUser(
+          userId: userId,
+          updatedFields: userFields,
+        );
+        if (userUpdateResult.status == ResourceStatus.failure) {
+          return Resource.failure(userUpdateResult.data.toString() ??
+              'Failed to update user profile');
+        }
+      }
+
+      if (interestIds != null && interestIds.isNotEmpty) {
+        final interestsUpdateResult = await updateUserInterests(
+          userId: userId,
+          interestIds: interestIds,
+        );
+        if (interestsUpdateResult.status == ResourceStatus.failure) {
+          return Resource.failure(interestsUpdateResult.data.toString() ??
+              'Failed to update user interests');
+        }
+      }
+
+      // Fetch and return the updated user profile
+      final updatedProfile = await getUserById(userId: userId);
+      if (updatedProfile == null) {
+        return Resource.failure('Failed to fetch updated user profile');
+      }
+
+      return Resource.success(updatedProfile);
+    } catch (e) {
+      print('Error updating user profile: $e');
+      return Resource.failure('An error occurred while updating user profile');
+    }
+  }
 }
