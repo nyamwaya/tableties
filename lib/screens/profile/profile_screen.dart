@@ -19,14 +19,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  List<String> randomInterests = [
-    'Travel',
-    'Big Foodie',
-    'Photography',
-    'Bollywood Movie',
-    'Shahrukh Khan'
-  ];
-
   @override
   Widget build(BuildContext context) {
     final profileBloc = BlocProvider.of<ProfileBloc>(context);
@@ -48,18 +40,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             } else if (state is ProfileLoading) {
               return Text('Profile Loading: ${state.props.first}');
             } else if (state is ProfileLoaded) {
-              // this should be an example of how we get valid json to and from the response.
-              //   final userData = jsonDecode(state.props.first as String);
               final user = state.props.first as UserProfile;
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  //  buildHeader(user, context),
+                  buildHeader(user, context),
                   SizedBox(height: 24),
-                  //  buildBioSection(user),
+                  buildBioSection(user),
                   SizedBox(height: 24),
-                  buildInterestsSection(randomInterests)
+                  buildInterestsSection(user)
                 ],
               );
 
@@ -76,7 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-Widget buildHeader(UserSupabase user, BuildContext context) {
+Widget buildHeader(UserProfile user, BuildContext context) {
   return Column(
     children: [
       Row(
@@ -146,7 +136,7 @@ Widget buildHeader(UserSupabase user, BuildContext context) {
   );
 }
 
-Widget buildBioSection(UserSupabase user) {
+Widget buildBioSection(UserProfile user) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -177,7 +167,7 @@ Widget buildBioSection(UserSupabase user) {
   );
 }
 
-Widget buildInterestsSection(List<String> interests) {
+Widget buildInterestsSection(UserProfile user) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -189,27 +179,35 @@ Widget buildInterestsSection(List<String> interests) {
         ),
       ),
       SizedBox(height: 8),
-      Wrap(
-        spacing: 8.0,
-        runSpacing: 8.0,
-        children: interests.map((interest) {
-          return Chip(
-            label: Text(
-              interest,
+      user.interests.isEmpty
+          ? Text(
+              'No interests yet. Edit your profile to add interests.',
               style: TextStyle(
                 fontSize: 16,
-                fontWeight: FontWeight.bold,
+                color: Colors.red,
               ),
+            )
+          : Wrap(
+              spacing: 8.0,
+              runSpacing: 8.0,
+              children: user.interests.map((interest) {
+                return Chip(
+                  label: Text(
+                    interest.name,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  backgroundColor: Colors.white,
+                  shape: StadiumBorder(
+                    side: BorderSide(
+                      color: Colors.black,
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
-            backgroundColor: Colors.white,
-            shape: StadiumBorder(
-              side: BorderSide(
-                color: Colors.black,
-              ),
-            ),
-          );
-        }).toList(),
-      ),
     ],
   );
 }
