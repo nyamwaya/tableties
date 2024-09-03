@@ -80,7 +80,7 @@ class UserProfile {
       createdAt: DateTime.parse(user.createdAt), // Parse createdAt string
       profilePhoto: user.profilePhoto,
       interests: [], // Initialize interests as an empty list
-      events: [], // Initialize events as an empty list
+      events: [], // Initialize events as an empty list but why initialize them as empty if they aready exist in the user object?
     );
   }
 }
