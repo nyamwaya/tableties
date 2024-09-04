@@ -24,14 +24,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _lastNameController;
   late TextEditingController _occupationController;
   late TextEditingController _bioController;
+  Map<String, String> fieldErrors = {};
 
   @override
   void initState() {
     super.initState();
-    _firstNameController = TextEditingController();
-    _lastNameController = TextEditingController();
-    _occupationController = TextEditingController();
-    _bioController = TextEditingController();
+    _initializeControllers();
+  }
+
+  void _initializeControllers() {
+    _firstNameController =
+        TextEditingController(text: widget.receivedUser.firstName);
+    _lastNameController =
+        TextEditingController(text: widget.receivedUser.lastName);
+    _occupationController =
+        TextEditingController(text: widget.receivedUser.occupation);
+    _bioController = TextEditingController(text: widget.receivedUser.bio);
   }
 
   @override
@@ -56,8 +64,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       body: BlocConsumer<EditProfileBloc, EditProfileState>(
         listener: (context, state) {
           if (state is EditProfileValidationError) {
+            setState(() {
+              fieldErrors = state.errors;
+              _updateControllers(state.submittedData);
+            });
+
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.errors.values.join('\n'))),
+              SnackBar(
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: state.errors.entries.map((entry) {
+                    return Text('${entry.key} is required');
+                  }).toList(),
+                ),
+              ),
             );
           } else if (state is EditProfileError) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -72,7 +93,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         builder: (context, state) {
           return Stack(
             children: [
-              _buildSuccessState(widget.receivedUser),
+              _buildForm(),
               if (state is EditProfileLoading)
                 const Center(child: CircularProgressIndicator()),
             ],
@@ -82,25 +103,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildSuccessState(UserProfile user) {
-    _firstNameController.text = user.firstName ?? '';
-    _lastNameController.text = user.lastName ?? '';
-    _occupationController.text = user.occupation ?? '';
-    _bioController.text = user.bio ?? '';
+  void _updateControllers(Map<String, dynamic> submittedData) {
+    _firstNameController.text =
+        submittedData['firstName'] ?? _firstNameController.text;
+    _lastNameController.text =
+        submittedData['lastName'] ?? _lastNameController.text;
+    _occupationController.text =
+        submittedData['occupation'] ?? _occupationController.text;
+    _bioController.text = submittedData['bio'] ?? _bioController.text;
+  }
 
+  Widget _buildForm() {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          buildProfilePicture(user),
+          buildProfilePicture(widget.receivedUser),
           const SizedBox(height: 24),
-          buildEditableField('First Name', _firstNameController),
-          buildEditableField('Last Name', _lastNameController),
-          buildEditableField('Occupation', _occupationController),
-          buildEditableBio(),
-          const SizedBox(height: 24),
-          //    buildInterestsSection(user.interests ?? []),
+          buildEditableField(
+              'First Name', _firstNameController, fieldErrors['firstName']),
+          buildEditableField(
+              'Last Name', _lastNameController, fieldErrors['lastName']),
+          buildEditableField(
+              'Occupation', _occupationController, fieldErrors['occupation']),
+          buildEditableBio(fieldErrors['bio']),
           const SizedBox(height: 24),
           buildSaveButton(context),
         ],
@@ -140,35 +167,52 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget buildEditableField(String label, TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+  Widget buildEditableField(
+      String label, TextEditingController controller, String? errorText) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (errorText != null)
+          Text(
+            errorText,
+            style: TextStyle(color: Colors.red),
+          ),
+        TextFormField(
+          controller: controller,
+          decoration: InputDecoration(
+            labelText: label,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
         ),
-      ),
+        SizedBox(height: 16),
+      ],
     );
   }
 
-  Widget buildEditableBio() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextFormField(
-        controller: _bioController,
-        maxLines: 4,
-        decoration: InputDecoration(
-          labelText: 'Bio',
-          alignLabelWithHint: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+  Widget buildEditableBio(String? errorText) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (errorText != null)
+          Text(
+            errorText,
+            style: TextStyle(color: Colors.red),
+          ),
+        TextFormField(
+          controller: _bioController,
+          maxLines: 4,
+          decoration: InputDecoration(
+            labelText: 'Bio',
+            alignLabelWithHint: true,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
         ),
-      ),
+        SizedBox(height: 16),
+      ],
     );
   }
 
@@ -216,39 +260,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       child: ElevatedButton(
         onPressed: () {
           // Create a map to hold only the changed fields
-          Map<String, dynamic> updatedFields = {};
-
-          // Check each field and add to updatedFields only if changed
-          if (_firstNameController.text != widget.receivedUser.firstName &&
-              _firstNameController.text.isNotEmpty) {
-            updatedFields['firstName'] = _firstNameController.text;
-          }
-          if (_lastNameController.text != widget.receivedUser.lastName &&
-              _lastNameController.text.isNotEmpty) {
-            updatedFields['lastName'] = _lastNameController.text;
-          }
-          if (_occupationController.text != widget.receivedUser.occupation &&
-              _occupationController.text.isNotEmpty) {
-            updatedFields['occupation'] = _occupationController.text;
-          }
-          if (_bioController.text != widget.receivedUser.bio &&
-              _bioController.text.isNotEmpty) {
-            updatedFields['bio'] = _bioController.text;
-          }
+          Map<String, dynamic> updatedFields = {
+            'firstName': _firstNameController.text,
+            'lastName': _lastNameController.text,
+            'occupation': _occupationController.text,
+            'bio': _bioController.text,
+          };
 
           // Dispatch update event to Edt Profile bloci
-          if (updatedFields.isNotEmpty) {
-            BlocProvider.of<EditProfileBloc>(context)
-                .add(UpdateProfile(profileChanges: updatedFields));
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                    'No changes detected. Please make changes before saving.'),
-                duration: Duration(seconds: 3),
-              ),
-            );
-          }
+          BlocProvider.of<EditProfileBloc>(context)
+              .add(UpdateProfile(profileChanges: updatedFields));
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.black,

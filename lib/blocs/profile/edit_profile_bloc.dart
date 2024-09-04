@@ -29,7 +29,10 @@ class EditProfileBloc extends Bloc<EditProfileEvents, EditProfileState> {
       // Validate fields
       final validationErrors = _validateFields(currentUser, updatedFields);
       if (validationErrors.isNotEmpty) {
-        emit(EditProfileValidationError(errors: validationErrors));
+        emit(EditProfileValidationError(
+          errors: validationErrors,
+          submittedData: event.profileChanges, // Include submitted data here
+        ));
         return;
       }
 

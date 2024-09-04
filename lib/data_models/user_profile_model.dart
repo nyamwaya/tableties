@@ -85,8 +85,8 @@ class UserProfile {
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
       id: json['id'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
+      firstName: json['first_name'],
+      lastName: json['last_name'],
       email: json['email'],
       occupation: json['occupation'],
       bio: json['bio'],
@@ -94,8 +94,8 @@ class UserProfile {
       gender: json['gender'],
       birthday:
           json['birthday'] != null ? DateTime.parse(json['birthday']) : null,
-      createdAt: DateTime.parse(json['createdAt']),
-      profilePhoto: json['profilePhoto'],
+      createdAt: DateTime.parse(json['created_at']),
+      profilePhoto: json['profile_photo'],
       interests: (json['interests'] as List<dynamic>?)
               ?.map((interestJson) => Interest.fromJson(interestJson))
               .toList() ??

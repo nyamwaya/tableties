@@ -22,11 +22,10 @@ class EditProfileSuccess extends EditProfileState {
 
 class EditProfileValidationError extends EditProfileState {
   final Map<String, String> errors;
+  final Map<String, dynamic> submittedData; // Add this line
 
-  const EditProfileValidationError({required this.errors});
-
-  @override
-  List<Object?> get props => [errors];
+  EditProfileValidationError(
+      {required this.errors, required this.submittedData});
 }
 
 class EditProfileNoChanges extends EditProfileState {}
