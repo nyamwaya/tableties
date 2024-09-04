@@ -49,8 +49,9 @@ class EditProfileBloc extends Bloc<EditProfileEvents, EditProfileState> {
       // Sanitize input
       final sanitizedData = _sanitizeData(mergedData);
 
+      final separatedData = _separateUserUpdates(sanitizedData);
       // Update the profile
-      final result = await profileRepository.updateUser(sanitizedData);
+      final result = await profileRepository.updateUser(separatedData);
       // save the new user object.
       //   emit(EditProfileSuccess(updatedFields: result));
     } catch (e) {
@@ -139,5 +140,33 @@ class EditProfileBloc extends Bloc<EditProfileEvents, EditProfileState> {
       }
       return MapEntry(key, value);
     });
+  }
+
+  Map<String, Map<String, dynamic>> _separateUserUpdates(
+      Map<String, dynamic> sanitizedData) {
+    Map<String, dynamic> userUpdates = {};
+    Map<String, dynamic> userInterestsUpdates = {};
+
+    sanitizedData.forEach((fieldName, newValue) {
+      if ([
+        'firstName',
+        'lastName',
+        'occupation',
+        'bio',
+        'email',
+        'phone',
+        'profilePhoto'
+      ].contains(fieldName)) {
+        userUpdates[fieldName] = newValue;
+      } else if (fieldName == 'interests') {
+        userInterestsUpdates[fieldName] = newValue;
+      }
+      // Add more conditions here if there are other tables to update
+    });
+
+    return {
+      'users': userUpdates,
+      'userInterests': userInterestsUpdates,
+    };
   }
 }

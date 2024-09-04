@@ -55,9 +55,9 @@ class ProfileREpository {
     try {
       final userId = await getUserId() as String;
 
-      final updateResult = await supabaseRepository.updateUser(
+      final updateResult = await supabaseRepository.updateUserProfile(
         userId: userId,
-        updatedFields: updatedFields,
+        userFields: updatedFields,
       );
 
       if (updateResult.status == ResourceStatus.failure) {

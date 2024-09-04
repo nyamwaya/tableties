@@ -253,9 +253,11 @@ class SupabaseRepository {
   }) async {
     try {
       if (userFields != null && userFields.isNotEmpty) {
+        final test = userFields['users'];
+
         final userUpdateResult = await updateUser(
           userId: userId,
-          updatedFields: userFields,
+          updatedFields: userFields['users'],
         );
         if (userUpdateResult.status == ResourceStatus.failure) {
           return Resource.failure(userUpdateResult.data.toString() ??

@@ -261,8 +261,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         onPressed: () {
           // Create a map to hold only the changed fields
           Map<String, dynamic> updatedFields = {
-            'firstName': _firstNameController.text,
-            'lastName': _lastNameController.text,
+            'first_name': _firstNameController.text,
+            'last_name': _lastNameController.text,
             'occupation': _occupationController.text,
             'bio': _bioController.text,
           };
